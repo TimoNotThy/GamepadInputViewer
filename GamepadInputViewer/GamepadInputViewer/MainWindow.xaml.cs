@@ -17,6 +17,7 @@ namespace GamepadInputViewer
         Controller? controller = null;
         State currentState;
         State previousState;
+        short triggerThreshold = 5000;
         public MainWindow()
         {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace GamepadInputViewer
             // Initialize XInput
             var controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two), new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
             // Get 1st controller available
+            updateDeviceView(controllers);
 
             foreach (var selectControler in controllers)
             {
@@ -58,7 +60,7 @@ namespace GamepadInputViewer
                     {
                         Trace.WriteLine(currentState.Gamepad);
 
-                        updateView();
+                        updateGamepadView();
                     }
 
                     previousState = currentState;
@@ -66,7 +68,27 @@ namespace GamepadInputViewer
             }
         }
 
-        public void updateView()
+        private void updateDeviceView(Controller?[] controllers)
+        {
+                if (controllers[0].IsConnected)
+                {
+                    Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Green)));
+                }
+            if (controllers[1].IsConnected)
+            {
+                Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Green)));
+            }
+            if (controllers[2].IsConnected)
+            {
+                Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Green)));
+            }
+            if (controllers[3].IsConnected)
+            {
+                Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Green)));
+            }
+        }
+
+        public void updateGamepadView()
         {
             //buttons
             if (currentState.Gamepad.Buttons == GamepadButtonFlags.None)
@@ -161,57 +183,57 @@ namespace GamepadInputViewer
                 RightTrigger.Dispatcher.BeginInvoke((Action)(() => RightTrigger.Fill = new SolidColorBrush(Colors.Green)));
             }
             //leftthumb
-            if (currentState.Gamepad.LeftThumbX < 5000 && currentState.Gamepad.LeftThumbX > -5000)
+            if (currentState.Gamepad.LeftThumbX < triggerThreshold && currentState.Gamepad.LeftThumbX > -triggerThreshold)
             {
                 LeftThumbLeft.Dispatcher.BeginInvoke((Action)(() => LeftThumbLeft.Fill = new SolidColorBrush(Colors.Gray)));
                 LeftThumbRight.Dispatcher.BeginInvoke((Action)(() => LeftThumbRight.Fill = new SolidColorBrush(Colors.Gray)));
             }
-            else if (currentState.Gamepad.LeftThumbX > 5000)
+            else if (currentState.Gamepad.LeftThumbX > triggerThreshold)
             {
                 LeftThumbRight.Dispatcher.BeginInvoke((Action)(() => LeftThumbRight.Fill = new SolidColorBrush(Colors.Green)));
             }
-            else if (currentState.Gamepad.LeftThumbX < -5000)
+            else if (currentState.Gamepad.LeftThumbX < -triggerThreshold)
             {
                 LeftThumbLeft.Dispatcher.BeginInvoke((Action)(() => LeftThumbLeft.Fill = new SolidColorBrush(Colors.Green)));
             }
-            if (currentState.Gamepad.LeftThumbY < 5000 && currentState.Gamepad.LeftThumbY > -5000)
+            if (currentState.Gamepad.LeftThumbY < triggerThreshold && currentState.Gamepad.LeftThumbY > -triggerThreshold)
             {
                 LeftThumbDown.Dispatcher.BeginInvoke((Action)(() => LeftThumbDown.Fill = new SolidColorBrush(Colors.Gray)));
                 LeftThumbUp.Dispatcher.BeginInvoke((Action)(() => LeftThumbUp.Fill = new SolidColorBrush(Colors.Gray)));
             }
-            else if (currentState.Gamepad.LeftThumbY > 5000)
+            else if (currentState.Gamepad.LeftThumbY > triggerThreshold)
             {
                 LeftThumbUp.Dispatcher.BeginInvoke((Action)(() => LeftThumbUp.Fill = new SolidColorBrush(Colors.Green)));
             }
-            else if (currentState.Gamepad.LeftThumbY < -5000)
+            else if (currentState.Gamepad.LeftThumbY < -triggerThreshold)
             {
                 LeftThumbDown.Dispatcher.BeginInvoke((Action)(() => LeftThumbDown.Fill = new SolidColorBrush(Colors.Green)));
             }
 
             //rightthumb
-            if (currentState.Gamepad.RightThumbX < 5000 && currentState.Gamepad.RightThumbX > -5000)
+            if (currentState.Gamepad.RightThumbX < triggerThreshold && currentState.Gamepad.RightThumbX > -triggerThreshold)
             {
                 RightThumbLeft.Dispatcher.BeginInvoke((Action)(() => RightThumbLeft.Fill = new SolidColorBrush(Colors.Gray)));
                 RightThumbRight.Dispatcher.BeginInvoke((Action)(() => RightThumbRight.Fill = new SolidColorBrush(Colors.Gray)));
             }
-            else if (currentState.Gamepad.RightThumbX > 5000)
+            else if (currentState.Gamepad.RightThumbX > triggerThreshold)
             {
                 RightThumbRight.Dispatcher.BeginInvoke((Action)(() => RightThumbRight.Fill = new SolidColorBrush(Colors.Green)));
             }
-            else if (currentState.Gamepad.RightThumbX < -5000)
+            else if (currentState.Gamepad.RightThumbX < -triggerThreshold)
             {
                 RightThumbLeft.Dispatcher.BeginInvoke((Action)(() => RightThumbLeft.Fill = new SolidColorBrush(Colors.Green)));
             }
-            if (currentState.Gamepad.RightThumbY < 5000 && currentState.Gamepad.RightThumbY > -5000)
+            if (currentState.Gamepad.RightThumbY < triggerThreshold && currentState.Gamepad.RightThumbY > -triggerThreshold)
             {
                 RightThumbDown.Dispatcher.BeginInvoke((Action)(() => RightThumbDown.Fill = new SolidColorBrush(Colors.Gray)));
                 RightThumbUp.Dispatcher.BeginInvoke((Action)(() => RightThumbUp.Fill = new SolidColorBrush(Colors.Gray)));
             }
-            else if (currentState.Gamepad.RightThumbY > 5000)
+            else if (currentState.Gamepad.RightThumbY > triggerThreshold)
             {
                 RightThumbUp.Dispatcher.BeginInvoke((Action)(() => RightThumbUp.Fill = new SolidColorBrush(Colors.Green)));
             }
-            else if (currentState.Gamepad.RightThumbY < -5000)
+            else if (currentState.Gamepad.RightThumbY < -triggerThreshold)
             {
                 RightThumbDown.Dispatcher.BeginInvoke((Action)(() => RightThumbDown.Fill = new SolidColorBrush(Colors.Green)));
             }

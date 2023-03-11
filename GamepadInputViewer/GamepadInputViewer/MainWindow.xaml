@@ -7,6 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Ellipse x:Name="ButtonY"  HorizontalAlignment="Left" Height="42" Margin="587,160,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="ButtonB" HorizontalAlignment="Left" Height="42" Margin="627,202,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="ButtonX" HorizontalAlignment="Left" Height="42" Margin="550,202,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="ButtonA" HorizontalAlignment="Left" Height="42" Margin="587,244,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="RightThumb" HorizontalAlignment="Left" Height="80" Margin="438,261,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="82"/>
+        <Ellipse x:Name="LeftThumb" HorizontalAlignment="Left" Height="80" Margin="171,181,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="82"/>
+        <Ellipse x:Name="Start" HorizontalAlignment="Left" Height="30" Margin="464,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="Back" HorizontalAlignment="Left" Height="30" Margin="318,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="DPadUp"  HorizontalAlignment="Left" Height="42" Margin="279,259,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="DPadRight" HorizontalAlignment="Left" Height="42" Margin="300,280,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="DPadLeft" HorizontalAlignment="Left" Height="42" Margin="258,280,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="DPadDown" HorizontalAlignment="Left" Height="42" Margin="279,301,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="LeftShoulder"  HorizontalAlignment="Left" Height="42" Margin="171,107,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="82"/>
+        <Ellipse x:Name="RightShoulder"  HorizontalAlignment="Left" Height="42" Margin="567,107,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="82"/>
+        <Ellipse x:Name="LeftTrigger"  HorizontalAlignment="Left" Height="48" Margin="191,44,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="RightTrigger"  HorizontalAlignment="Left" Height="48" Margin="587,44,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="42"/>
+        <Ellipse x:Name="LeftThumbRight" HorizontalAlignment="Left" Height="30" Margin="223,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="LeftThumbUp" HorizontalAlignment="Left" Height="30" Margin="197,181,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="LeftThumbLeft" HorizontalAlignment="Left" Height="30" Margin="171,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="LeftThumbDown" HorizontalAlignment="Left" Height="30" Margin="197,231,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="RightThumbUp" HorizontalAlignment="Left" Height="30" Margin="464,261,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="RightThumbRight" HorizontalAlignment="Left" Height="30" Margin="490,286,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="RightThumbDown" HorizontalAlignment="Left" Height="30" Margin="464,311,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="RightThumbLeft" HorizontalAlignment="Left" Height="30" Margin="438,286,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
     </Grid>
 </Window>

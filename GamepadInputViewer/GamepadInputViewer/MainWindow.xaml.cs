@@ -36,17 +36,17 @@ namespace GamepadInputViewer
             }
             Task.Factory.StartNew(() => inputPolling());
             Trace.WriteLine("End XGamepadApp");
-
         }
 
 
         public void inputPolling()
         {
-            if (controller == null)
+            while(controller == null)
             {
+                refreshDevices();
                 Trace.WriteLine("No XInput controller installed");
             }
-            else
+            if(controller != null)
             {
                 Trace.WriteLine("Found a XInput controller available");
                 Trace.WriteLine("Press buttons on the controller to display events or escape key to exit... ");

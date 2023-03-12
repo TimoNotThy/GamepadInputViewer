@@ -4,96 +4,79 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System;
+using System.Windows.Controls;
 
 namespace GamepadInputViewer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         Controller? controller = null;
-        Controller[]? controllers = null;
+        DeviceManager deviceManager = new DeviceManager();
         State currentState;
         State previousState;
         short triggerThreshold = 5000;
+        public bool Checked { get; set; } = true;
         public MainWindow()
         {
             InitializeComponent();
-            Trace.WriteLine("Start XGamepadApp");
-            // Initialize XInput
-            controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two), new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
-            // Get 1st controller available
-            updateDeviceView(controllers);
-
-            foreach (var selectControler in controllers)
+            Autoconnect.DataContext = this;
+            Task.Run(async () =>
             {
-                if (selectControler.IsConnected)
-                {
-                    controller = selectControler;
-                    break;
-                }
-            }
-            Task.Factory.StartNew(() => inputPolling());
-            Trace.WriteLine("End XGamepadApp");
+                await inputPolling();
+            });
         }
 
-
-        public void inputPolling()
+        public async Task inputPolling()
         {
-            while(controller == null)
+            while (controller == null)
             {
+                await Task.Delay(100);
                 refreshDevices();
-                Trace.WriteLine("No XInput controller installed");
             }
-            if(controller != null)
+            if (controller != null)
             {
-                Trace.WriteLine("Found a XInput controller available");
-                Trace.WriteLine("Press buttons on the controller to display events or escape key to exit... ");
                 previousState = controller.GetState();
-                while (true)
+            }
+            while (true)
+            {
+                await Task.Delay(50);
+                refreshDevices();
+                if (controller != null && controller.IsConnected)
                 {
-                    refreshDevices();
-                    if (controller.IsConnected)
+                    currentState = controller.GetState();
+                    if (previousState.PacketNumber != currentState.PacketNumber)
                     {
-                        currentState = controller.GetState();
-                        if (previousState.PacketNumber != currentState.PacketNumber)
-                        {
-                            Trace.WriteLine(currentState.Gamepad);
+                        Trace.WriteLine(currentState.Gamepad);
 
-                            updateGamepadView();
-                        }
-
-                        previousState = currentState;
+                        updateGamepadView();
                     }
+
+                    previousState = currentState;
                 }
             }
         }
 
-        private void updateDeviceView(Controller[] controllers)
+        private void updateDeviceView()
         {
             Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Red)));
             Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Red)));
             Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Red)));
             Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Red)));
-            if (controllers != null)
+            if (deviceManager.GetController(0) is not null && deviceManager.GetController(0)!.IsConnected)
             {
-                if (controllers[0].IsConnected)
-                {
-                    Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Green)));
-                }
-                if (controllers[1].IsConnected)
-                {
-                    Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Green)));
-                }
-                if (controllers[2].IsConnected)
-                {
-                    Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Green)));
-                }
-                if (controllers[3].IsConnected)
-                {
-                    Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Green)));
-                }
+                Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Green)));
+            }
+            if (deviceManager.GetController(1) is not null && deviceManager.GetController(1)!.IsConnected)
+            {
+                Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Green)));
+            }
+            if (deviceManager.GetController(2) is not null && deviceManager.GetController(2)!.IsConnected)
+            {
+                Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Green)));
+            }
+            if (deviceManager.GetController(3) is not null && deviceManager.GetController(3)!.IsConnected)
+            {
+                Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Green)));
             }
         }
 
@@ -250,22 +233,32 @@ namespace GamepadInputViewer
 
         private void refreshDevices()
         {
-            if (controllers != null)
+            updateDeviceView();
+            if (controller == null || controller.IsConnected == false)
             {
-                updateDeviceView(controllers);
-
-                if (controller == null || controller.IsConnected == false)
+                if (Checked)
                 {
-                    foreach (var selectControler in controllers)
-                    {
-                        if (selectControler.IsConnected)
-                        {
-                            controller = selectControler;
-                            break;
-                        }
-                    }
+                    controller = deviceManager.GetController();
                 }
+                /*                else
+                                {
+                                    int temp = 0;
+                                    DeviceSelector.Dispatcher.BeginInvoke((Action)(() => temp = DeviceSelector.SelectedIndex));
+                                    controller = deviceManager.GetController(temp);
+                                }*/
             }
+        }
+
+        private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedItem != null)
+            {
+                controller = deviceManager.GetController(((ComboBox)sender).SelectedIndex);
+            }
+        }
+        private void CheckBox_Unchecked(object sender, EventArgs e)
+        {
+            controller = deviceManager.GetController(DeviceSelector.SelectedIndex);
         }
     }
 }

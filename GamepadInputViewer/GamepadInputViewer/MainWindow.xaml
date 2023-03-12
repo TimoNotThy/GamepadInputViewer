@@ -40,6 +40,13 @@
         <Ellipse x:Name="Device2"  HorizontalAlignment="Left" Height="15" Margin="64,41,0,0" Stroke="Black" Fill="Red" VerticalAlignment="Top" Width="15"/>
         <Ellipse x:Name="Device3"  HorizontalAlignment="Left" Height="15" Margin="64,67,0,0" Stroke="Black" Fill="Red" VerticalAlignment="Top" Width="15"/>
         <Ellipse x:Name="Device4"  HorizontalAlignment="Left" Height="15" Margin="64,93,0,0" Stroke="Black" Fill="Red" VerticalAlignment="Top" Width="15"/>
+        <CheckBox x:Name="Autoconnect" Content="Connect to first available" HorizontalAlignment="Left" Margin="7,114,0,0" VerticalAlignment="Top" IsChecked="{Binding Checked}" Unchecked="CheckBox_Unchecked"/>
+        <ComboBox x:Name="DeviceSelector" HorizontalAlignment="Left" Margin="7,135,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0" SelectionChanged="DeviceSelector_SelectionChanged">
+            <ComboBoxItem>Device1</ComboBoxItem>
+            <ComboBoxItem>Device2</ComboBoxItem>
+            <ComboBoxItem>Device3</ComboBoxItem>
+            <ComboBoxItem>Device4</ComboBoxItem>
+        </ComboBox>
 
 
 

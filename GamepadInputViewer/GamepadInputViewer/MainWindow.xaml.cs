@@ -240,12 +240,6 @@ namespace GamepadInputViewer
                 {
                     controller = deviceManager.GetController();
                 }
-                /*                else
-                                {
-                                    int temp = 0;
-                                    DeviceSelector.Dispatcher.BeginInvoke((Action)(() => temp = DeviceSelector.SelectedIndex));
-                                    controller = deviceManager.GetController(temp);
-                                }*/
             }
         }
 

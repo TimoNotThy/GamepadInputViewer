@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System;
 using System.Windows.Controls;
+using SharpDX.DirectInput;
+using GamepadInputViewer.Controllers;
+using GamepadInputViewer.Model;
 
 namespace GamepadInputViewer
 {
     public partial class MainWindow : Window
     {
+        GamepadBase gamepad = null;
         Controller? controller = null;
-        DeviceManager deviceManager = new DeviceManager();
+        DeviceManagerXInput deviceManager = new DeviceManagerXInput();
         State currentState;
         State previousState;
         short triggerThreshold = 5000;
@@ -19,11 +23,71 @@ namespace GamepadInputViewer
         public MainWindow()
         {
             InitializeComponent();
+            gamepad = new GamePadXInput(deviceManager.GetController());
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
+
                 await inputPolling();
             });
+        }
+
+        static void MainForJoystick()
+        {
+            // Initialize DirectInput
+            var directInput = new DirectInput();
+
+            // Find a Joystick Guid
+            var joystickGuid = Guid.Empty;
+
+            foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
+                joystickGuid = deviceInstance.InstanceGuid;
+
+            // If Gamepad not found, look for a Joystick
+            if (joystickGuid == Guid.Empty)
+                foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                    joystickGuid = deviceInstance.InstanceGuid;
+
+            // If Joystick not found, throws an error
+            if (joystickGuid == Guid.Empty)
+            {
+                Trace.WriteLine("No joystick/Gamepad found.");
+            }
+
+            // Instantiate the joystick
+            var joystick = new Joystick(directInput, joystickGuid);
+
+            Trace.WriteLine("Found Joystick/Gamepad with GUID: " + joystickGuid);
+
+            // Query all suported ForceFeedback effects
+            var allEffects = joystick.GetEffects();
+            foreach (var effectInfo in allEffects)
+                Trace.WriteLine("Effect available " + effectInfo.Name);
+
+            // Set BufferSize in order to use buffered data.
+            joystick.Properties.BufferSize = 128;
+
+            // Acquire the joystick
+            joystick.Acquire();
+
+            // Poll events from joystick
+            while (true)
+            {
+                joystick.Poll();
+                var datas = joystick.GetBufferedData();
+                var buttons = joystick.GetCurrentState().Buttons;
+                Trace.WriteLine(joystick.GetCurrentState().PointOfViewControllers.GetValue(0));
+                /*                foreach (var data in datas)
+                                {
+                                    Trace.WriteLine(data);
+                                }*/
+                /*                for (int i = 0; i < buttons.Length; i++)
+                                {
+                                    if (buttons[i] == true)
+                                        Trace.WriteLine(i);
+                                }*/
+
+            }
         }
 
         public async Task inputPolling()
@@ -31,6 +95,7 @@ namespace GamepadInputViewer
             while (controller == null)
             {
                 await Task.Delay(100);
+                gamepad = (GamepadBase)new GamePadXInput(deviceManager.GetController());
                 refreshDevices();
             }
             if (controller != null)
@@ -39,6 +104,7 @@ namespace GamepadInputViewer
             }
             while (true)
             {
+                Trace.WriteLine(currentState.Gamepad.Buttons);
                 await Task.Delay(50);
                 refreshDevices();
                 if (controller != null && controller.IsConnected)
@@ -58,53 +124,79 @@ namespace GamepadInputViewer
 
         private void updateDeviceView()
         {
-            Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Red)));
-            Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Red)));
-            Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Red)));
-            Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Red)));
-            if (deviceManager.GetController(0) is not null && deviceManager.GetController(0)!.IsConnected)
+            if (deviceManager.isControllerConnected(0))
             {
-                Device1.Dispatcher.BeginInvoke((Action)(() => Device1.Fill = new SolidColorBrush(Colors.Green)));
+                paintElipse(Device1, Colors.Green);
             }
-            if (deviceManager.GetController(1) is not null && deviceManager.GetController(1)!.IsConnected)
+            else
             {
-                Device2.Dispatcher.BeginInvoke((Action)(() => Device2.Fill = new SolidColorBrush(Colors.Green)));
+                paintElipse(Device1, Colors.Red);
             }
-            if (deviceManager.GetController(2) is not null && deviceManager.GetController(2)!.IsConnected)
+            if (deviceManager.isControllerConnected(1))
             {
-                Device3.Dispatcher.BeginInvoke((Action)(() => Device3.Fill = new SolidColorBrush(Colors.Green)));
+                paintElipse(Device2, Colors.Green);
             }
-            if (deviceManager.GetController(3) is not null && deviceManager.GetController(3)!.IsConnected)
+            else
             {
-                Device4.Dispatcher.BeginInvoke((Action)(() => Device4.Fill = new SolidColorBrush(Colors.Green)));
+                paintElipse(Device2, Colors.Red);
+            }
+            if (deviceManager.isControllerConnected(2))
+            {
+                paintElipse(Device3, Colors.Green);
+            }
+            else
+            {
+                paintElipse(Device3, Colors.Red);
+            }
+            if (deviceManager.isControllerConnected(3))
+            {
+                paintElipse(Device4, Colors.Green);
+            }
+            else
+            {
+                paintElipse(Device4, Colors.Red);
             }
         }
 
         public void updateGamepadView()
         {
             //buttons
-            if (currentState.Gamepad.Buttons == GamepadButtonFlags.None)
+            if (gamepad.isTopButtonPressed())
             {
-                ButtonY.Dispatcher.BeginInvoke((Action)(() => ButtonY.Fill = new SolidColorBrush(Colors.Gray)));
-                ButtonB.Dispatcher.BeginInvoke((Action)(() => ButtonB.Fill = new SolidColorBrush(Colors.Gray)));
-                ButtonA.Dispatcher.BeginInvoke((Action)(() => ButtonA.Fill = new SolidColorBrush(Colors.Gray)));
-                ButtonX.Dispatcher.BeginInvoke((Action)(() => ButtonX.Fill = new SolidColorBrush(Colors.Gray)));
-                RightThumb.Dispatcher.BeginInvoke((Action)(() => RightThumb.Fill = new SolidColorBrush(Colors.Gray)));
-                LeftThumb.Dispatcher.BeginInvoke((Action)(() => LeftThumb.Fill = new SolidColorBrush(Colors.Gray)));
-                Start.Dispatcher.BeginInvoke((Action)(() => Start.Fill = new SolidColorBrush(Colors.Gray)));
-                Back.Dispatcher.BeginInvoke((Action)(() => Back.Fill = new SolidColorBrush(Colors.Gray)));
-                LeftShoulder.Dispatcher.BeginInvoke((Action)(() => LeftShoulder.Fill = new SolidColorBrush(Colors.Gray)));
-                RightShoulder.Dispatcher.BeginInvoke((Action)(() => RightShoulder.Fill = new SolidColorBrush(Colors.Gray)));
-                DPadDown.Dispatcher.BeginInvoke((Action)(() => DPadDown.Fill = new SolidColorBrush(Colors.Gray)));
-                DPadLeft.Dispatcher.BeginInvoke((Action)(() => DPadLeft.Fill = new SolidColorBrush(Colors.Gray)));
-                DPadRight.Dispatcher.BeginInvoke((Action)(() => DPadRight.Fill = new SolidColorBrush(Colors.Gray)));
-                DPadUp.Dispatcher.BeginInvoke((Action)(() => DPadUp.Fill = new SolidColorBrush(Colors.Gray)));
-            }
-            else if (currentState.Gamepad.Buttons == GamepadButtonFlags.Y)
+                paintElipse(ButtonY, Colors.Green);
+            } else
             {
-                ButtonY.Dispatcher.BeginInvoke((Action)(() => ButtonY.Fill = new SolidColorBrush(Colors.Green)));
+                paintElipse(ButtonY, Colors.Gray);
             }
-            else if (currentState.Gamepad.Buttons == GamepadButtonFlags.B)
+
+            if (gamepad.isRightButtonPressed())
+            {
+                paintElipse(ButtonB, Colors.Green);
+            }
+            else
+            {
+                paintElipse(ButtonB, Colors.Gray);
+            }
+
+            if (gamepad.isBottomButtonPressed())
+            {
+                paintElipse(ButtonA, Colors.Green);
+            }
+            else
+            {
+                paintElipse(ButtonA, Colors.Gray);
+            }
+
+            if (gamepad.isLeftButtonPressed())
+            {
+                paintElipse(ButtonX, Colors.Green);
+            }
+            else
+            {
+                paintElipse(ButtonX, Colors.Gray);
+            }
+
+            if (currentState.Gamepad.Buttons == GamepadButtonFlags.B)
             {
                 ButtonB.Dispatcher.BeginInvoke((Action)(() => ButtonB.Fill = new SolidColorBrush(Colors.Green)));
             }
@@ -234,10 +326,12 @@ namespace GamepadInputViewer
         private void refreshDevices()
         {
             updateDeviceView();
+
             if (controller == null || controller.IsConnected == false)
             {
                 if (Checked)
                 {
+                    gamepad = new GamePadXInput(deviceManager.GetController());
                     controller = deviceManager.GetController();
                 }
             }
@@ -253,6 +347,11 @@ namespace GamepadInputViewer
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
             controller = deviceManager.GetController(DeviceSelector.SelectedIndex);
+        }
+
+        private void paintElipse(System.Windows.Shapes.Ellipse elipse, System.Windows.Media.Color color)
+        {
+            elipse.Dispatcher.BeginInvoke((Action)(() => elipse.Fill = new SolidColorBrush(color)));
         }
     }
 }

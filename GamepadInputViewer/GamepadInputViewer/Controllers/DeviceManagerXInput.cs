@@ -7,13 +7,15 @@ using SharpDX.XInput;
 
 namespace GamepadInputViewer
 {
-    public class DeviceManager
+    public class DeviceManagerXInput
     {
 
         Controller[]? controllers = null;
 
         int? currentControllerInUse = null;
-        public DeviceManager()
+
+        int MAX_AMOUNT_OF_DEVICES = 4;
+        public DeviceManagerXInput()
         {
             controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two),
                 new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
@@ -50,6 +52,16 @@ namespace GamepadInputViewer
             }
             currentControllerInUse = null;
             return null;
+        }
+
+        public int getAmountOfDevices()
+        {
+            return MAX_AMOUNT_OF_DEVICES;
+        }
+
+        public bool isControllerConnected(int index)
+        {
+            return GetController(index) is not null && GetController(index).IsConnected;
         }
 
         public int? GetCurrentControllerInUse()

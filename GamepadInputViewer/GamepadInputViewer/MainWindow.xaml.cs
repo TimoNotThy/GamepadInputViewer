@@ -19,7 +19,7 @@ namespace GamepadInputViewer
         Color DEVICE_ACTIVE = Colors.Green;
         Color DEVICE_NOT_ACTIVE = Colors.Red;
         int MAX_AXIS = 32768;
-        int THUMB_PADDING = 22;
+        int THUMB_PADDING = 20;
         Tuple<double, double> leftThumbPosition;
         Tuple<double, double> rightThumbPosition;
         GamepadBase gamepad = null;
@@ -31,8 +31,8 @@ namespace GamepadInputViewer
         public MainWindow()
         {
             InitializeComponent();
-            leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Top, LeftThumbPos.Margin.Left);
-            rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Top, RightThumbPos.Margin.Left);
+            leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
+            rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
             gamepad = new GamePadXInput(deviceManager.GetController());
             Autoconnect.DataContext = this;
             Task.Run(async () =>
@@ -105,7 +105,7 @@ namespace GamepadInputViewer
             while (controller == null)
             {
                 await Task.Delay(100);
-                gamepad = (GamepadBase)new GamePadXInput(deviceManager.GetController());
+                gamepad = new GamePadXInput(deviceManager.GetController());
                 refreshDevices();
             }
             if (controller != null)
@@ -115,7 +115,7 @@ namespace GamepadInputViewer
             while (true)
             {
                 Trace.WriteLine(currentState.Gamepad.Buttons);
-                await Task.Delay(50);
+                await Task.Delay(25);
                 refreshDevices();
                 if (controller != null && controller.IsConnected)
                 {
@@ -156,34 +156,45 @@ namespace GamepadInputViewer
             updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
             updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
             updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
-            updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger); 
+            updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
             updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
-
-            updateLeftThumbPos();
-            updateRightThumbPos();
+            updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
+            updateRightThumbPosition(gamepad.getRightJoystickAxes());
 
         }
 
-        private void updateLeftThumbPos()
+        private void updateLeftThumbPosition(Tuple<int, int> axes)
         {
-            int devider = MAX_AXIS / THUMB_PADDING;
-            var thumbAxes = gamepad.getLeftJoystickAxes();
-            int displacementXAxis = thumbAxes.Item1 / devider;
-            displacementXAxis = (displacementXAxis > THUMB_PADDING) ? THUMB_PADDING : displacementXAxis;
-            int displacementYAxis = thumbAxes.Item2 / devider;
-            displacementYAxis = (displacementYAxis > THUMB_PADDING) ? THUMB_PADDING : displacementYAxis;
-            LeftThumbPos.Dispatcher.BeginInvoke((Action)(() => LeftThumbPos.Margin = new Thickness(leftThumbPosition.Item1 + displacementXAxis, leftThumbPosition.Item2 - displacementYAxis, 0, 0)));
+            if (Math.Abs(axes.Item1) > Gamepad.LeftThumbDeadZone || Math.Abs(axes.Item2) > Gamepad.LeftThumbDeadZone)
+            {
+                int devider = (MAX_AXIS - Gamepad.LeftThumbDeadZone) / THUMB_PADDING;
+                int displacementXAxis = axes.Item1 / devider;
+                int displacementYAxis = axes.Item2 / devider;
+                LeftThumbPos.Dispatcher.BeginInvoke((Action)(() =>
+                LeftThumbPos.Margin = new Thickness(leftThumbPosition.Item1 + displacementXAxis, leftThumbPosition.Item2 - displacementYAxis, 0, 0)));
+            }
+            else
+            {
+                LeftThumbPos.Dispatcher.BeginInvoke((Action)(() =>
+                LeftThumbPos.Margin = new Thickness(leftThumbPosition.Item1, leftThumbPosition.Item2, 0, 0)));
+            }
         }
 
-        private void updateRightThumbPos()
+        private void updateRightThumbPosition(Tuple<int, int> axes)
         {
-            int devider = MAX_AXIS / THUMB_PADDING;
-            var thumbAxes = gamepad.getRightJoystickAxes();
-            int displacementXAxis = thumbAxes.Item1 / devider;
-            displacementXAxis = (displacementXAxis > THUMB_PADDING) ? THUMB_PADDING : displacementXAxis;
-            int displacementYAxis = thumbAxes.Item2 / devider;
-            displacementYAxis = (displacementYAxis > THUMB_PADDING) ? THUMB_PADDING : displacementYAxis;
-            RightThumbPos.Dispatcher.BeginInvoke((Action)(() => RightThumbPos.Margin = new Thickness(rightThumbPosition.Item2 + displacementXAxis, rightThumbPosition.Item1 - displacementYAxis, 0, 0)));
+            if (Math.Abs(axes.Item1) > Gamepad.RightThumbDeadZone || Math.Abs(axes.Item2) > Gamepad.RightThumbDeadZone)
+            {
+                int devider = (MAX_AXIS - Gamepad.RightThumbDeadZone) / THUMB_PADDING;
+                int displacementXAxis = axes.Item1 / devider;
+                int displacementYAxis = axes.Item2 / devider;
+                RightThumbPos.Dispatcher.BeginInvoke((Action)(() =>
+                RightThumbPos.Margin = new Thickness(rightThumbPosition.Item1 + displacementXAxis, rightThumbPosition.Item2 - displacementYAxis, 0, 0)));
+            }
+            else
+            {
+                RightThumbPos.Dispatcher.BeginInvoke((Action)(() =>
+                    RightThumbPos.Margin = new Thickness(rightThumbPosition.Item1, rightThumbPosition.Item2, 0, 0)));
+            }
         }
 
         private void refreshDevices()
@@ -212,7 +223,7 @@ namespace GamepadInputViewer
             controller = deviceManager.GetController(DeviceSelector.SelectedIndex);
         }
 
-        private void paintElipse (Ellipse elipse, Color color)
+        private void paintElipse(Ellipse elipse, Color color)
         {
             elipse.Dispatcher.BeginInvoke((Action)(() => elipse.Fill = new SolidColorBrush(color)));
         }

@@ -25,6 +25,7 @@ namespace GamepadInputViewer
         GamepadBase gamepad = null;
         Controller? controller = null;
         DeviceManagerXInput deviceManager = new DeviceManagerXInput();
+        DeviceManagerDirectInput deviceManager2 = new DeviceManagerDirectInput();
         State currentState;
         State previousState;
         public bool Checked { get; set; } = true;
@@ -33,7 +34,8 @@ namespace GamepadInputViewer
             InitializeComponent();
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
             rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
-            gamepad = new GamePadXInput(deviceManager.GetController());
+            //gamepad = new GamePadXInput(deviceManager.GetController());
+            gamepad = new GamepadDirectInput(deviceManager2.getController());
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
@@ -44,11 +46,17 @@ namespace GamepadInputViewer
 
         public async Task inputPolling()
         {
-            while (controller == null)
+            while (true)
+            {
+                await Task.Delay(25);
+                updateGamepadView();
+            }
+            //xinput
+/*            while (controller == null)
             {
                 await Task.Delay(100);
                 gamepad = new GamePadXInput(deviceManager.GetController());
-                refreshDevices();
+                //refreshDevices();
             }
             if (controller != null)
             {
@@ -72,7 +80,7 @@ namespace GamepadInputViewer
 
                     previousState = currentState;
                 }
-            }
+            }*/
         }
 
         private void updateDeviceView()

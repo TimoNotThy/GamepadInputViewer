@@ -10,7 +10,7 @@ namespace GamepadInputViewer
     public class DeviceManagerXInput
     {
 
-        Controller[]? controllers = null;
+        Controller[] controllers;
 
         int? currentControllerInUse = null;
 
@@ -40,12 +40,12 @@ namespace GamepadInputViewer
             if (controllers != null)
             {
                 int i = 0;
-                foreach (var selectControler in controllers)
+                foreach (var controller in controllers)
                 {
-                    if (selectControler.IsConnected)
+                    if (controller.IsConnected)
                     {
                         currentControllerInUse = i;
-                        return selectControler;
+                        return controller;
                     }
                     i++;
                 }

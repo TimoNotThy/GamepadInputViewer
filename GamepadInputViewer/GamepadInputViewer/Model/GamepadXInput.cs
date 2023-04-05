@@ -9,7 +9,7 @@ namespace GamepadInputViewer.Model
 {
     internal class GamePadXInput : GamepadBase
     {
-        Controller controller = new Controller();
+        Controller controller;
 
         public GamePadXInput(Controller controller)
         {

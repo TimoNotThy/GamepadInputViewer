@@ -19,79 +19,75 @@ namespace GamepadInputViewer.Model
         {
             return controller.IsConnected;
         }
-        public bool isNothingPressed()
-        {
-            return getGamepadState().Buttons == GamepadButtonFlags.Y;
-        }
 
         public bool isTopButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.Y;
+            return (getGamepadState().Buttons & GamepadButtonFlags.Y) == GamepadButtonFlags.Y;
         }
 
         public bool isRightButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.B;
+            return (getGamepadState().Buttons & GamepadButtonFlags.B) == GamepadButtonFlags.B;
         }
 
         public bool isBottomButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.A;
+            return (getGamepadState().Buttons & GamepadButtonFlags.A) == GamepadButtonFlags.A;
         }
 
         public bool isLeftButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.X;
+            return (getGamepadState().Buttons & GamepadButtonFlags.X) == GamepadButtonFlags.X;
         }
 
         public bool isStartButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.Start;
+            return (getGamepadState().Buttons & GamepadButtonFlags.Start) == GamepadButtonFlags.Start;
         }
 
         public bool isBackButtonPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.Back;
+            return (getGamepadState().Buttons & GamepadButtonFlags.Back) == GamepadButtonFlags.Back;
         }
 
         public bool isLeftBumperPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.LeftShoulder;
+            return (getGamepadState().Buttons & GamepadButtonFlags.LeftShoulder) == GamepadButtonFlags.LeftShoulder;
         }
 
         public bool isRightBumperPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.RightShoulder;
+            return (getGamepadState().Buttons & GamepadButtonFlags.RightShoulder) == GamepadButtonFlags.RightShoulder;
         }
 
         public bool isLeftJoystickPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.LeftThumb;
+            return (getGamepadState().Buttons & GamepadButtonFlags.LeftThumb) == GamepadButtonFlags.LeftThumb;
         }
 
         public bool isRightJoystickPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.RightThumb;
+            return (getGamepadState().Buttons & GamepadButtonFlags.RightThumb) == GamepadButtonFlags.RightThumb;
         }
 
         public bool isDPadUpPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.DPadUp;
+            return (getGamepadState().Buttons & GamepadButtonFlags.DPadUp) == GamepadButtonFlags.DPadUp;
         }
 
         public bool isDPadRightPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.DPadRight;
+            return (getGamepadState().Buttons & GamepadButtonFlags.DPadRight) == GamepadButtonFlags.DPadRight;
         }
 
         public bool isDPadDownPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.DPadDown;
+            return (getGamepadState().Buttons & GamepadButtonFlags.DPadDown) == GamepadButtonFlags.DPadDown;
         }
 
         public bool isDPadLeftPressed()
         {
-            return getGamepadState().Buttons == GamepadButtonFlags.DPadLeft;
+            return (getGamepadState().Buttons & GamepadButtonFlags.DPadLeft) == GamepadButtonFlags.DPadLeft;
         }
 
         public int getLeftTrigger()

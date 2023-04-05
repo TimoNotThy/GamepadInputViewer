@@ -56,6 +56,7 @@ namespace GamepadInputViewer
             }
             while (true)
             {
+                var temp = currentState.Gamepad.Buttons;
                 Trace.WriteLine(currentState.Gamepad.Buttons);
                 await Task.Delay(25);
                 refreshDevices();

@@ -24,14 +24,8 @@
         <Ellipse x:Name="RightShoulder"  HorizontalAlignment="Left" Height="42" Margin="525,100,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="82" RenderTransformOrigin="0.533,0.961"/>
         <Ellipse x:Name="LeftTrigger"  HorizontalAlignment="Left" Height="73" Margin="217,15,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="50"/>
         <Ellipse x:Name="RightTrigger"  HorizontalAlignment="Left" Height="73" Margin="541,15,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="50"/>
-        <Ellipse x:Name="LeftThumbRight" HorizontalAlignment="Left" Height="30" Margin="230,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="LeftThumbUp" HorizontalAlignment="Left" Height="30" Margin="202,179,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="LeftThumbLeft" HorizontalAlignment="Left" Height="30" Margin="175,208,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="LeftThumbDown" HorizontalAlignment="Left" Height="30" Margin="201,235,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="RightThumbUp" HorizontalAlignment="Left" Height="30" Margin="478,290,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="RightThumbRight" HorizontalAlignment="Left" Height="30" Margin="505,318,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="RightThumbDown" HorizontalAlignment="Left" Height="30" Margin="478,345,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
-        <Ellipse x:Name="RightThumbLeft" HorizontalAlignment="Left" Height="30" Margin="450,318,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="LeftThumbPos" HorizontalAlignment="Left" Height="30" Margin="202,207,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
+        <Ellipse x:Name="RightThumbPos" HorizontalAlignment="Left" Height="30" Margin="477,319,0,0" Stroke="Black" Fill="Gray" VerticalAlignment="Top" Width="30"/>
         <Label Content="Device1:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Device2:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
         <Label Content="Device3:" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top"/>

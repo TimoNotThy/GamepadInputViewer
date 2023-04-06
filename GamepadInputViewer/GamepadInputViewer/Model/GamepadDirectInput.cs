@@ -19,45 +19,50 @@ namespace GamepadInputViewer.Model
             controller.Acquire();
         }
 
+        public bool isConnected()
+        {
+            return true;
+        }
+
         public bool isTopButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[3] == true;
+            return controller.GetCurrentState().Buttons[3];
         }
         public bool isRightButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[1] == true;
+            return controller.GetCurrentState().Buttons[1];
         }
         public bool isBottomButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[0] == true;
+            return controller.GetCurrentState().Buttons[0];
         }
         public bool isLeftButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[2] == true;
+            return controller.GetCurrentState().Buttons[2];
         }
         public bool isStartButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[7] == true;
+            return controller.GetCurrentState().Buttons[7];
         }
         public bool isBackButtonPressed()
         {
-            return controller.GetCurrentState().Buttons[6] == true;
+            return controller.GetCurrentState().Buttons[6];
         }
         public bool isLeftBumperPressed()
         {
-            return controller.GetCurrentState().Buttons[4] == true;
+            return controller.GetCurrentState().Buttons[4];
         }
         public bool isRightBumperPressed()
         {
-            return controller.GetCurrentState().Buttons[5] == true;
+            return controller.GetCurrentState().Buttons[5];
         }
         public bool isLeftJoystickPressed()
         {
-            return controller.GetCurrentState().Buttons[8] == true;
+            return controller.GetCurrentState().Buttons[8];
         }
         public bool isRightJoystickPressed()
         {
-            return controller.GetCurrentState().Buttons[9] == true;
+            return controller.GetCurrentState().Buttons[9];
         }
         public bool isDPadUpPressed()
         {
@@ -107,7 +112,6 @@ namespace GamepadInputViewer.Model
         }
         public int getRightTrigger()
         {
-            Trace.WriteLine(controller.GetCurrentState().AccelerationX);
             if (controller.GetCurrentState().Z < 32767)
             {
                 return Math.Abs(((controller.GetCurrentState().Z) / 256) - 128);
@@ -134,5 +138,6 @@ namespace GamepadInputViewer.Model
             yAxis -= 32767;
             return new Tuple<int, int>(xAxis, -yAxis);
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,46 +13,37 @@ namespace GamepadInputViewer
 
         Controller[] controllers;
 
-        int? currentControllerInUse = null;
+        Controller currentControllerInUse;
 
         int MAX_AMOUNT_OF_DEVICES = 4;
         public DeviceManagerXInput()
         {
             controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two),
                 new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
+
         }
 
-        public Controller? GetController(int number)
+        public Controller GetController(int number)
         {
-            if (controllers != null && number >= 0 && number <= 3)
-            {
-                if (controllers[number].IsConnected)
-                {
-                    currentControllerInUse = number;
-                    return controllers[number];
-                }
-            }
-            currentControllerInUse = null;
-            return null;
+            currentControllerInUse = controllers[number];
+            return controllers[number];
+
         }
 
-        public Controller? GetController()
+        public Controller GetController()
         {
-            if (controllers != null)
+            int i = 0;
+            foreach (var controller in controllers)
             {
-                int i = 0;
-                foreach (var controller in controllers)
+                if (controller.IsConnected)
                 {
-                    if (controller.IsConnected)
-                    {
-                        currentControllerInUse = i;
-                        return controller;
-                    }
-                    i++;
+                    currentControllerInUse = controllers[i];
+                    return controller;
                 }
+                i++;
             }
-            currentControllerInUse = null;
-            return null;
+            currentControllerInUse = controllers[0];
+            return controllers[0];
         }
 
         public int getAmountOfDevices()
@@ -64,9 +56,9 @@ namespace GamepadInputViewer
             return GetController(index) is not null && GetController(index).IsConnected;
         }
 
-        public int? GetCurrentControllerInUse()
+/*        public int GetCurrentControllerInUse()
         {
-            return currentControllerInUse;
-        }
+            return currentControllerInUse.;
+        }*/
     }
 }

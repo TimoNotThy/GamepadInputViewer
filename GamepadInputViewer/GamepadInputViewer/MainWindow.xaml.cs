@@ -22,65 +22,30 @@ namespace GamepadInputViewer
         int THUMB_PADDING = 20;
         Tuple<double, double> leftThumbPosition;
         Tuple<double, double> rightThumbPosition;
-        GamepadBase gamepad = null;
-        Controller? controller = null;
-        DeviceManagerXInput deviceManager = new DeviceManagerXInput();
-        DeviceManagerDirectInput deviceManager2 = new DeviceManagerDirectInput();
-        State currentState;
-        State previousState;
+        GamepadBase gamepad;
+        GamepadController gamepadController;
         public bool Checked { get; set; } = true;
         public MainWindow()
         {
+            gamepadController = new GamepadController();
             InitializeComponent();
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
             rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
-            //gamepad = new GamePadXInput(deviceManager.GetController());
-            gamepad = new GamepadDirectInput(deviceManager2.getController());
+            gamepad = gamepadController.getGamepad(InputType.XInput);
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
-
-                await inputPolling();
-            });
-        }
-
-        public async Task inputPolling()
-        {
-            while (true)
-            {
-                await Task.Delay(25);
-                updateGamepadView();
-            }
-            //xinput
-/*            while (controller == null)
-            {
-                await Task.Delay(100);
-                gamepad = new GamePadXInput(deviceManager.GetController());
-                //refreshDevices();
-            }
-            if (controller != null)
-            {
-                previousState = controller.GetState();
-            }
-            while (true)
-            {
-                var temp = currentState.Gamepad.Buttons;
-                Trace.WriteLine(currentState.Gamepad.Buttons);
-                await Task.Delay(25);
-                refreshDevices();
-                if (controller != null && controller.IsConnected)
+                while (true)
                 {
-                    currentState = controller.GetState();
-                    if (previousState.PacketNumber != currentState.PacketNumber)
+                    await Task.Delay(25);
+                    if (Checked)
                     {
-                        Trace.WriteLine(currentState.Gamepad);
-
-                        updateGamepadView();
+                        gamepad = gamepadController.getGamepad(InputType.XInput);
                     }
-
-                    previousState = currentState;
+                    updateGamepadView();
+                    updateDeviceView();
                 }
-            }*/
+            });
         }
 
         private void updateDeviceView()
@@ -93,25 +58,27 @@ namespace GamepadInputViewer
 
         public void updateGamepadView()
         {
-            updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
-            updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
-            updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
-            updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
-            updateButtonColor(gamepad.isStartButtonPressed(), Start);
-            updateButtonColor(gamepad.isBackButtonPressed(), Back);
-            updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
-            updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
-            updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
-            updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
-            updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
-            updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
-            updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
-            updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
-            updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
-            updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
-            updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
-            updateRightThumbPosition(gamepad.getRightJoystickAxes());
-
+            if (gamepad.isConnected())
+            {
+                updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
+                updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
+                updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
+                updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
+                updateButtonColor(gamepad.isStartButtonPressed(), Start);
+                updateButtonColor(gamepad.isBackButtonPressed(), Back);
+                updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
+                updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
+                updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
+                updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
+                updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
+                updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
+                updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
+                updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
+                updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
+                updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
+                updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
+                updateRightThumbPosition(gamepad.getRightJoystickAxes());
+            }
         }
 
         private void updateLeftThumbPosition(Tuple<int, int> axes)
@@ -148,30 +115,17 @@ namespace GamepadInputViewer
             }
         }
 
-        private void refreshDevices()
-        {
-            updateDeviceView();
-
-            if (controller == null || controller.IsConnected == false)
-            {
-                if (Checked)
-                {
-                    gamepad = new GamePadXInput(deviceManager.GetController());
-                    controller = deviceManager.GetController();
-                }
-            }
-        }
-
         private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedItem != null)
             {
-                controller = deviceManager.GetController(((ComboBox)sender).SelectedIndex);
+                gamepad = gamepadController.getGamepad(InputType.XInput, ((ComboBox)sender).SelectedIndex);
             }
+
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
-            controller = deviceManager.GetController(DeviceSelector.SelectedIndex);
+            gamepad = gamepadController.getGamepad(InputType.XInput, DeviceSelector.SelectedIndex);
         }
 
         private void paintElipse(Ellipse elipse, Color color)
@@ -205,7 +159,7 @@ namespace GamepadInputViewer
 
         private void updateDeviceColor(int deviceId, Ellipse elipse)
         {
-            if (deviceManager.isControllerConnected(deviceId))
+            if (gamepadController.isControllerConnected(deviceId))
             {
                 paintElipse(elipse, DEVICE_ACTIVE);
             }

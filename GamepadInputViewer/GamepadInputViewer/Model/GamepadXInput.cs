@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace GamepadInputViewer.Model
 {
-    internal class GamePadXInput : GamepadBase
+    internal class GamepadXInput : GamepadBase
     {
         Controller controller;
 
-        public GamePadXInput(Controller controller)
+        public GamepadXInput(Controller controller)
         {
             this.controller = controller;
         }
-        private bool isConnected()
+        public bool isConnected()
         {
             return controller.IsConnected;
         }
@@ -110,7 +110,7 @@ namespace GamepadInputViewer.Model
             return new Tuple<int, int>(getGamepadState().RightThumbX, getGamepadState().RightThumbY);
         }
 
-        private SharpDX.XInput.Gamepad getGamepadState()
+        private Gamepad getGamepadState()
         {
             return controller.GetState().Gamepad;
         }

@@ -6,13 +6,13 @@ namespace GamepadInputViewer.Controllers
     {
         private DeviceManagerXInput deviceManagerXInput = new DeviceManagerXInput();
         private DeviceManagerDirectInput deviceManagerDirectInput = new DeviceManagerDirectInput();
-        private InputType selectedInputType;
+        private InputType inputType;
 
         public GamepadController() 
         {
             this.deviceManagerXInput = new DeviceManagerXInput();
             this.deviceManagerDirectInput = new DeviceManagerDirectInput();
-            selectedInputType = InputType.DirectInput;
+            inputType = InputType.XInput;
         }
 
         public GamepadBase getGamepad(InputType inputType)
@@ -20,13 +20,10 @@ namespace GamepadInputViewer.Controllers
             switch (inputType)
             {
                 case InputType.XInput:
-                    selectedInputType = InputType.XInput;
                     return new GamepadXInput(deviceManagerXInput.GetController());
                 case InputType.DirectInput:
-                    selectedInputType = InputType.DirectInput;
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
                 default:
-                    selectedInputType = InputType.DirectInput;
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
             }
         }
@@ -36,15 +33,22 @@ namespace GamepadInputViewer.Controllers
             switch (inputType)
             {
                 case InputType.XInput:
-                    selectedInputType = InputType.XInput;
                     return new GamepadXInput(deviceManagerXInput.GetController(deviceId));
                 case InputType.DirectInput:
-                    selectedInputType = InputType.DirectInput;
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
                 default:
-                    selectedInputType = InputType.DirectInput;
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
             }
+        }
+
+        public void setInputType(InputType type)
+        {
+            inputType = type;
+        }
+
+        public InputType getInputType()
+        {
+            return inputType;
         }
 
         public bool isControllerConnected(int deviceId)

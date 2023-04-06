@@ -29,7 +29,7 @@ namespace GamepadInputViewer
             InitializeComponent();
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
             rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
-            gamepad = gamepadController.getGamepad(InputType.XInput);
+            gamepad = gamepadController.getGamepad(gamepadController.getInputType());
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
@@ -39,7 +39,7 @@ namespace GamepadInputViewer
                     if (Checked)
                     {
                     await DeviceSelector.Dispatcher.BeginInvoke((Action)(() => DeviceSelector.IsEnabled = false));
-                        gamepad = gamepadController.getGamepad(InputType.XInput);
+                        gamepad = gamepadController.getGamepad(gamepadController.getInputType());
                     }
                     else
                     {
@@ -122,13 +122,13 @@ namespace GamepadInputViewer
         {
             if (((ComboBox)sender).SelectedItem != null)
             {
-                gamepad = gamepadController.getGamepad(InputType.XInput, ((ComboBox)sender).SelectedIndex);
+                gamepad = gamepadController.getGamepad(gamepadController.getInputType(), ((ComboBox)sender).SelectedIndex);
             }
 
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
-            gamepad = gamepadController.getGamepad(InputType.XInput, DeviceSelector.SelectedIndex);
+            gamepad = gamepadController.getGamepad(gamepadController.getInputType(), DeviceSelector.SelectedIndex);
         }
 
         private void paintElipse(Ellipse elipse, Color color)
@@ -170,6 +170,19 @@ namespace GamepadInputViewer
             {
                 paintElipse(elipse, DEVICE_NOT_ACTIVE);
             }
+        }
+
+        private void InputSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex == 1)
+            {
+                gamepadController.setInputType(InputType.XInput);
+            }
+            else
+            {
+                gamepadController.setInputType(InputType.DirectInput);
+            }
+
         }
     }
 }

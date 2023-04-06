@@ -1,11 +1,9 @@
 ﻿using System.Windows;
 using SharpDX.XInput;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System;
 using System.Windows.Controls;
-using SharpDX.DirectInput;
 using GamepadInputViewer.Controllers;
 using GamepadInputViewer.Model;
 using System.Windows.Shapes;
@@ -40,7 +38,12 @@ namespace GamepadInputViewer
                     await Task.Delay(25);
                     if (Checked)
                     {
+                    await DeviceSelector.Dispatcher.BeginInvoke((Action)(() => DeviceSelector.IsEnabled = false));
                         gamepad = gamepadController.getGamepad(InputType.XInput);
+                    }
+                    else
+                    {
+                        await DeviceSelector.Dispatcher.BeginInvoke((Action)(() => DeviceSelector.IsEnabled = true));
                     }
                     updateGamepadView();
                     updateDeviceView();

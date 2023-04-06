@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.XInput;
+﻿using SharpDX.XInput;
 
 namespace GamepadInputViewer
 {
@@ -20,6 +14,7 @@ namespace GamepadInputViewer
         {
             controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two),
                 new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
+            currentControllerInUse = controllers[0];
 
         }
 

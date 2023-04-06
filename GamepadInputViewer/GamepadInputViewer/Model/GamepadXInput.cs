@@ -6,10 +6,12 @@ namespace GamepadInputViewer.Model
     internal class GamepadXInput : GamepadBase
     {
         Controller controller;
+        int deviceId;
 
         public GamepadXInput(Controller controller)
         {
             this.controller = controller;
+            deviceId = ((int)controller.UserIndex);
         }
         public bool isConnected()
         {
@@ -109,6 +111,15 @@ namespace GamepadInputViewer.Model
         private Gamepad getGamepadState()
         {
             return controller.GetState().Gamepad;
+        }
+
+        public int getId()
+        {
+            return deviceId;
+        }
+        public void setId(int id)
+        {
+            deviceId = id;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using GamepadInputViewer.Controllers;
 using GamepadInputViewer.Model;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace GamepadInputViewer
 {
@@ -33,17 +34,19 @@ namespace GamepadInputViewer
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
-                while (true)
+            while (true)
+            {
+                await Task.Delay(25);
+
+                if (Checked == true)
                 {
-                    await Task.Delay(25);
-                    if (Checked)
-                    {
-                    await DeviceSelector.Dispatcher.BeginInvoke((Action)(() => DeviceSelector.IsEnabled = false));
-                        gamepad = gamepadController.getGamepad(gamepadController.getInputType());
-                    }
-                    else
-                    {
-                        await DeviceSelector.Dispatcher.BeginInvoke((Action)(() => DeviceSelector.IsEnabled = true));
+                    gamepad = gamepadController.getGamepad(gamepadController.getInputType());
+                }
+                else if (Checked == false)
+                {
+                    var selectedIndex = 0;
+                    DeviceSelector.Dispatcher.Invoke(() => selectedIndex = DeviceSelector.SelectedIndex);
+                        gamepad = gamepadController.getGamepad(gamepadController.getInputType(), selectedIndex);
                     }
                     updateGamepadView();
                     updateDeviceView();
@@ -61,7 +64,7 @@ namespace GamepadInputViewer
 
         public void updateGamepadView()
         {
-            if (gamepad.isConnected())
+            if (gamepadController.isControllerConnected(gamepad.getId()))
             {
                 updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
                 updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
@@ -120,15 +123,20 @@ namespace GamepadInputViewer
 
         private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (((ComboBox)sender).SelectedItem != null)
+/*            if (((ComboBox)sender).SelectedItem != null)
             {
                 gamepad = gamepadController.getGamepad(gamepadController.getInputType(), ((ComboBox)sender).SelectedIndex);
-            }
+            }*/
 
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
-            gamepad = gamepadController.getGamepad(gamepadController.getInputType(), DeviceSelector.SelectedIndex);
+            DeviceSelector.IsEnabled = true;
+        }
+
+        private void CheckBox_Checked(object sender, EventArgs e)
+        {
+            DeviceSelector.IsEnabled = false;
         }
 
         private void paintElipse(Ellipse elipse, Color color)

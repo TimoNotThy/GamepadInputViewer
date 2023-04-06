@@ -1,4 +1,6 @@
 ﻿using GamepadInputViewer.Model;
+using SharpDX.DirectInput;
+using System.Collections.Generic;
 
 namespace GamepadInputViewer.Controllers
 {
@@ -8,7 +10,7 @@ namespace GamepadInputViewer.Controllers
         private DeviceManagerDirectInput deviceManagerDirectInput = new DeviceManagerDirectInput();
         private InputType inputType;
 
-        public GamepadController() 
+        public GamepadController()
         {
             this.deviceManagerXInput = new DeviceManagerXInput();
             this.deviceManagerDirectInput = new DeviceManagerDirectInput();
@@ -35,9 +37,13 @@ namespace GamepadInputViewer.Controllers
                 case InputType.XInput:
                     return new GamepadXInput(deviceManagerXInput.GetController(deviceId));
                 case InputType.DirectInput:
-                    return new GamepadDirectInput(deviceManagerDirectInput.getController());
+                    var gamepad = new GamepadDirectInput(deviceManagerDirectInput.getController(deviceId));
+                    gamepad.setId(deviceId);
+                    return gamepad;
                 default:
-                    return new GamepadDirectInput(deviceManagerDirectInput.getController());
+                    var gamepaddef = new GamepadDirectInput(deviceManagerDirectInput.getController(deviceId));
+                    gamepaddef.setId(deviceId);
+                    return gamepaddef;
             }
         }
 
@@ -53,8 +59,14 @@ namespace GamepadInputViewer.Controllers
 
         public bool isControllerConnected(int deviceId)
         {
-            return deviceManagerXInput.isControllerConnected(deviceId);
+            switch (inputType)
+            {
+                case InputType.XInput:
+                    return deviceManagerXInput.isControllerConnected(deviceId);
+                case InputType.DirectInput:
+                    return deviceManagerDirectInput.isControllerConnected(deviceId);
+            }
+            return false;
         }
-
     }
 }

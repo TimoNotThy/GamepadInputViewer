@@ -120,8 +120,6 @@ namespace GamepadInputViewer.Model
         }
         public Tuple<int, int> getLeftJoystickAxes()
         {
-           // Trace.WriteLine(controller.GetCurrentState().X);
-           // Trace.WriteLine(controller.GetCurrentState().Y);
             int xAxis = controller.GetCurrentState().X;
             int yAxis = controller.GetCurrentState().Y;
                 xAxis -= 32767;
@@ -130,7 +128,11 @@ namespace GamepadInputViewer.Model
         }
         public Tuple<int, int> getRightJoystickAxes()
         {
-            return new Tuple<int, int>(1, 1);
+            int xAxis = controller.GetCurrentState().RotationX;
+            int yAxis = controller.GetCurrentState().RotationY;
+            xAxis -= 32767;
+            yAxis -= 32767;
+            return new Tuple<int, int>(xAxis, -yAxis);
         }
     }
 }

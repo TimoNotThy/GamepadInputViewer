@@ -9,20 +9,28 @@ namespace GamepadInputViewer.Controllers
     internal class DeviceManagerDirectInput
     {
         DirectInput directInput;
+        List<Guid> joysticks;
 
         public DeviceManagerDirectInput()
         {
             directInput = new DirectInput();
+            joysticks = new List<Guid>(4);   
         }
 
         public Joystick? getController()
         {
+            joysticks.Clear();
             var joystickGuid = Guid.Empty;
 
             foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
             {
                 joystickGuid = deviceInstance.InstanceGuid;
+                joysticks.Add(deviceInstance.InstanceGuid);
 
+            }
+            while(joysticks.Count < 4)
+            {
+                joysticks.Add(Guid.Empty); 
             }
             if (joystickGuid != Guid.Empty)
             {
@@ -33,17 +41,27 @@ namespace GamepadInputViewer.Controllers
 
         public Joystick? getController(int number)
         {
-            if (directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices).Count > number)
+            joysticks.Clear();
+            var joystickGuid = Guid.Empty;
+
+            foreach (var deviceInstance in directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
             {
-                var joystickGuid = directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices)[number].InstanceGuid;
-                return new Joystick(directInput, joystickGuid);
+                joysticks.Add(deviceInstance.InstanceGuid);
+            }
+            while (joysticks.Count < 4)
+            {
+                joysticks.Add(Guid.Empty);
+            }
+            if (joysticks[number] != Guid.Empty)
+            {
+                return new Joystick(directInput, joysticks[number]);
             }
             return null;
         }
 
         public bool isControllerConnected(int index)
         {
-            if (directInput.GetDevices(SharpDX.DirectInput.DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices).Count > index)
+            if (joysticks[index] != Guid.Empty)
             {
                 return true;
             }

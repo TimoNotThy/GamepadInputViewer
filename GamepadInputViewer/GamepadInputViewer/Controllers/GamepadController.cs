@@ -17,7 +17,7 @@ namespace GamepadInputViewer.Controllers
             inputType = InputType.XInput;
         }
 
-        public GamepadBase getGamepad(InputType inputType)
+        public GamepadBase? getGamepad(InputType inputType)
         {
             switch (inputType)
             {
@@ -30,7 +30,7 @@ namespace GamepadInputViewer.Controllers
             }
         }
 
-        public GamepadBase getGamepad(InputType inputType, int deviceId)
+        public GamepadBase? getGamepad(InputType inputType, int deviceId)
         {
             switch (inputType)
             {

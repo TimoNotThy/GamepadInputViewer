@@ -8,6 +8,7 @@ using GamepadInputViewer.Controllers;
 using GamepadInputViewer.Model;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using SharpDX;
 
 namespace GamepadInputViewer
 {
@@ -21,8 +22,9 @@ namespace GamepadInputViewer
         int THUMB_PADDING = 20;
         Tuple<double, double> leftThumbPosition;
         Tuple<double, double> rightThumbPosition;
-        GamepadBase gamepad;
+        GamepadBase? gamepad;
         GamepadController gamepadController;
+        bool selectionChanged = false;
         public bool Checked { get; set; } = true;
         public MainWindow()
         {
@@ -34,19 +36,22 @@ namespace GamepadInputViewer
             Autoconnect.DataContext = this;
             Task.Run(async () =>
             {
-            while (true)
-            {
-                await Task.Delay(25);
-
-                if (Checked == true)
+                while (true)
                 {
-                    gamepad = gamepadController.getGamepad(gamepadController.getInputType());
-                }
-                else if (Checked == false)
-                {
-                    var selectedIndex = 0;
-                    DeviceSelector.Dispatcher.Invoke(() => selectedIndex = DeviceSelector.SelectedIndex);
-                        gamepad = gamepadController.getGamepad(gamepadController.getInputType(), selectedIndex);
+                    await Task.Delay(25);
+                    if (selectionChanged)
+                    {
+                        if (Checked == true)
+                        {
+                            gamepad = gamepadController.getGamepad(gamepadController.getInputType());
+                        }
+                        else if (Checked == false)
+                        {
+                            var selectedIndex = 0;
+                            DeviceSelector.Dispatcher.Invoke(() => selectedIndex = DeviceSelector.SelectedIndex);
+                            gamepad = gamepadController.getGamepad(gamepadController.getInputType(), selectedIndex);
+                        }
+                        selectionChanged = false;
                     }
                     updateGamepadView();
                     updateDeviceView();
@@ -64,26 +69,42 @@ namespace GamepadInputViewer
 
         public void updateGamepadView()
         {
-            if (gamepadController.isControllerConnected(gamepad.getId()))
+            if (gamepad != null)
             {
-                updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
-                updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
-                updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
-                updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
-                updateButtonColor(gamepad.isStartButtonPressed(), Start);
-                updateButtonColor(gamepad.isBackButtonPressed(), Back);
-                updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
-                updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
-                updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
-                updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
-                updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
-                updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
-                updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
-                updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
-                updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
-                updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
-                updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
-                updateRightThumbPosition(gamepad.getRightJoystickAxes());
+                if (gamepadController.isControllerConnected(gamepad.getId()))
+                {
+                    try
+                    {
+                        updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
+                        updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
+                        updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
+                        updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
+                        updateButtonColor(gamepad.isStartButtonPressed(), Start);
+                        updateButtonColor(gamepad.isBackButtonPressed(), Back);
+                        updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
+                        updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
+                        updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
+                        updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
+                        updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
+                        updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
+                        updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
+                        updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
+                        updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
+                        updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
+                        updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
+                        updateRightThumbPosition(gamepad.getRightJoystickAxes());
+
+                    }
+                    catch (SharpDXException e)
+                    {
+                        selectionChanged = true;
+                    }
+                }
+                else
+                {
+                    selectionChanged = true;
+                }
+
             }
         }
 
@@ -123,19 +144,22 @@ namespace GamepadInputViewer
 
         private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-/*            if (((ComboBox)sender).SelectedItem != null)
-            {
-                gamepad = gamepadController.getGamepad(gamepadController.getInputType(), ((ComboBox)sender).SelectedIndex);
-            }*/
+            selectionChanged = true;
+            /*            if (((ComboBox)sender).SelectedItem != null)
+                        {
+                            gamepad = gamepadController.getGamepad(gamepadController.getInputType(), ((ComboBox)sender).SelectedIndex);
+                        }*/
 
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
+            selectionChanged = true;
             DeviceSelector.IsEnabled = true;
         }
 
         private void CheckBox_Checked(object sender, EventArgs e)
         {
+            selectionChanged = true;
             DeviceSelector.IsEnabled = false;
         }
 
@@ -182,6 +206,7 @@ namespace GamepadInputViewer
 
         private void InputSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            selectionChanged = true;
             if (((ComboBox)sender).SelectedIndex == 1)
             {
                 gamepadController.setInputType(InputType.XInput);

@@ -24,7 +24,7 @@ namespace GamepadInputViewer.Model
 
         public bool isTopButtonPressed()
         {
-            if (getGamepadState().HasValue) return false;
+            if (getGamepadState() is null) return false;
             return (getGamepadState().Value.Buttons & GamepadButtonFlags.Y) == GamepadButtonFlags.Y;
         }
 

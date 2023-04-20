@@ -57,6 +57,7 @@ namespace GamepadInputViewer
                     updateDeviceView();
                 }
             });
+            gamepadController.deviceManagerRawInput.test();
         }
 
         private void updateDeviceView()
@@ -145,11 +146,6 @@ namespace GamepadInputViewer
         private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectionChanged = true;
-            /*            if (((ComboBox)sender).SelectedItem != null)
-                        {
-                            gamepad = gamepadController.getGamepad(gamepadController.getInputType(), ((ComboBox)sender).SelectedIndex);
-                        }*/
-
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {
@@ -211,9 +207,13 @@ namespace GamepadInputViewer
             {
                 gamepadController.setInputType(InputType.XInput);
             }
-            else
+            else if (((ComboBox)sender).SelectedIndex == 0)
             {
                 gamepadController.setInputType(InputType.DirectInput);
+            }
+            else
+            {
+                gamepadController.setInputType(InputType.RawInput);
             }
 
         }

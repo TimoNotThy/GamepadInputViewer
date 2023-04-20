@@ -8,6 +8,7 @@ namespace GamepadInputViewer.Controllers
     {
         private DeviceManagerXInput deviceManagerXInput = new DeviceManagerXInput();
         private DeviceManagerDirectInput deviceManagerDirectInput = new DeviceManagerDirectInput();
+        public DeviceManagerRawInput deviceManagerRawInput = new DeviceManagerRawInput();
         private InputType inputType;
 
         public GamepadController()
@@ -15,6 +16,7 @@ namespace GamepadInputViewer.Controllers
             this.deviceManagerXInput = new DeviceManagerXInput();
             this.deviceManagerDirectInput = new DeviceManagerDirectInput();
             inputType = InputType.XInput;
+            
         }
 
         public GamepadBase? getGamepad(InputType inputType)
@@ -25,6 +27,8 @@ namespace GamepadInputViewer.Controllers
                     return new GamepadXInput(deviceManagerXInput.GetController());
                 case InputType.DirectInput:
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
+                case InputType.RawInput:
+                    return null; //TODO
                 default:
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
             }
@@ -40,6 +44,8 @@ namespace GamepadInputViewer.Controllers
                     var gamepad = new GamepadDirectInput(deviceManagerDirectInput.getController(deviceId));
                     gamepad.setId(deviceId);
                     return gamepad;
+                case InputType.RawInput:
+                    return null; //TODO
                 default:
                     var gamepaddef = new GamepadDirectInput(deviceManagerDirectInput.getController(deviceId));
                     gamepaddef.setId(deviceId);
@@ -65,6 +71,8 @@ namespace GamepadInputViewer.Controllers
                     return deviceManagerXInput.isControllerConnected(deviceId);
                 case InputType.DirectInput:
                     return deviceManagerDirectInput.isControllerConnected(deviceId);
+                case InputType.RawInput:
+                    return true; //TODO
             }
             return false;
         }

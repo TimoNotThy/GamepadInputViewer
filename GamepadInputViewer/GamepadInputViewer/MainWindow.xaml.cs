@@ -9,6 +9,9 @@ using GamepadInputViewer.Model;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using SharpDX;
+using System.Windows.Interop;
+using Linearstar.Windows.RawInput;
+using System.Collections.Generic;
 
 namespace GamepadInputViewer
 {
@@ -26,10 +29,13 @@ namespace GamepadInputViewer
         GamepadController gamepadController;
         bool selectionChanged = false;
         public bool Checked { get; set; } = true;
+        List<sbyte> rawInputData;
         public MainWindow()
         {
-            gamepadController = new GamepadController();
+            rawInputData = new List<sbyte>(new sbyte[30]);
+            gamepadController = new GamepadController(rawInputData);
             InitializeComponent();
+            SourceInitialized += MainWindow_SourceInitialized;
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
             rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
             gamepad = gamepadController.getGamepad(gamepadController.getInputType());
@@ -57,7 +63,45 @@ namespace GamepadInputViewer
                     updateDeviceView();
                 }
             });
-            gamepadController.deviceManagerRawInput.test();
+        }
+
+        private void MainWindow_SourceInitialized(object sender, EventArgs e)
+        {
+            var windowInteropHelper = new WindowInteropHelper(this);
+            var hwnd = windowInteropHelper.Handle;
+
+            RawInputDevice.RegisterDevice(HidUsageAndPage.GamePad,
+                RawInputDeviceFlags.InputSink, hwnd);
+
+            HwndSource source = HwndSource.FromHwnd(hwnd);
+            source.AddHook(Hook);
+        }
+
+        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
+        {
+            const int WM_INPUT = 0x00FF;
+
+            if (msg == WM_INPUT)
+            {
+                var data = RawInputData.FromHandle(lparam);
+
+                var sourceDeviceHandle = data.Header.DeviceHandle;
+                var sourceDevice = data.Device;
+
+                switch (data)
+                {
+                    case RawInputHidData hid:
+                        var tempArray = (sbyte[])(Array)hid.Hid.ToStructure();
+                        for(int i = 0; i < tempArray.Length; i++)
+                        {
+                            rawInputData[i] = tempArray[i];
+                        }
+
+                        break;
+                }
+            }
+
+            return IntPtr.Zero;
         }
 
         private void updateDeviceView()

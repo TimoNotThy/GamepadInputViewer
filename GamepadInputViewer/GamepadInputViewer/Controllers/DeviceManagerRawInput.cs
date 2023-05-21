@@ -1,34 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.RawInput;
-using SharpDX.Multimedia;
+﻿using System.Collections.Generic;
+using Linearstar.Windows.RawInput;
 
 namespace GamepadInputViewer.Controllers
 {
     internal class DeviceManagerRawInput
     {
+        List<RawInputDevice?> rawInputGamepads;
         public DeviceManagerRawInput()
         {
+            rawInputGamepads = new List<RawInputDevice?>();
+            var devices = RawInputDevice.GetDevices();
+            foreach (var device in devices)
+            {
+                if (device.UsageAndPage == HidUsageAndPage.GamePad)
+                {
+                    rawInputGamepads.Add(device);
+                }
+            }
+            if(rawInputGamepads.Count < 4)
+            {
+                for(int i = rawInputGamepads.Count; i < 5; i++)
+                {
+                    rawInputGamepads.Add(null);
+                }
+            }
 
         }
 
-        public void GetController(int number)
+        public RawInputDevice? GetController(int number)
         {
-
+            if (number < rawInputGamepads.Count)
+            {
+                return rawInputGamepads[number];
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public void GetController()
+        public RawInputDevice? GetController()
         {
-
+            if (rawInputGamepads.Count > 0)
+            {
+                return rawInputGamepads[0];
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public void isControllerConnected(int index)
+        public bool isControllerConnected(int index)
         {
-
+            if (rawInputGamepads[index] == null) {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
 

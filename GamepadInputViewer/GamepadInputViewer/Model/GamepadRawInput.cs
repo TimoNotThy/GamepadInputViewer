@@ -1,112 +1,145 @@
-﻿using System;
+﻿using Linearstar.Windows.RawInput;
+using System;
+using System.Collections.Generic;
 
 namespace GamepadInputViewer.Model
 {
     internal class GamepadRawInput : GamepadBase
     {
-        public int getId()
-        {
-            throw new NotImplementedException();
-        }
+        List<sbyte> rawInputHidData;
+        RawInputDevice? rawInputDevice;
+        int deviceId;
 
-        public Tuple<int, int> getLeftJoystickAxes()
+        public GamepadRawInput(RawInputDevice? rawInputDevice, List<sbyte> rawInputHidData)
         {
-            throw new NotImplementedException();
-        }
-
-        public int getLeftTrigger()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Tuple<int, int> getRightJoystickAxes()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int getRightTrigger()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isBackButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isBottomButtonPressed()
-        {
-            throw new NotImplementedException();
+            this.rawInputHidData = rawInputHidData;
+            this.rawInputDevice = rawInputDevice;
+            if (rawInputHidData is not null)
+            {
+                deviceId = 0;
+            }
         }
 
         public bool isConnected()
         {
-            throw new NotImplementedException();
-        }
-
-        public bool isDPadDownPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isDPadLeftPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isDPadRightPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isDPadUpPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isLeftBumperPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isLeftButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isLeftJoystickPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isRightBumperPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isRightButtonPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isRightJoystickPressed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isStartButtonPressed()
-        {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool isTopButtonPressed()
         {
-            throw new NotImplementedException();
+
+            if (rawInputHidData[19] == 8)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool isRightButtonPressed()
+        {
+            if (rawInputHidData[19] == 2)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool isBottomButtonPressed()
+        {
+            if (rawInputHidData[19] == 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool isLeftButtonPressed()
+        {
+            if (rawInputHidData[19] == 4)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool isStartButtonPressed()
+        {
+            return false;
+        }
+
+        public bool isBackButtonPressed()
+        {
+            return false;
+        }
+
+        public bool isLeftBumperPressed()
+        {
+            return false;
+        }
+
+        public bool isRightBumperPressed()
+        {
+            return false;
+        }
+
+        public bool isLeftJoystickPressed()
+        {
+            return false;
+        }
+
+        public bool isRightJoystickPressed()
+        {
+            return false;
+        }
+
+        public bool isDPadUpPressed()
+        {
+            return false;
+        }
+
+        public bool isDPadRightPressed()
+        {
+            return false;
+        }
+
+        public bool isDPadDownPressed()
+        {
+            return false;
+        }
+
+        public bool isDPadLeftPressed()
+        {
+            return false;
+        }
+
+        public int getLeftTrigger()
+        {
+            return 1;
+        }
+
+        public int getRightTrigger()
+        {
+            return 1;
+        }
+
+        public Tuple<int, int> getLeftJoystickAxes()
+        {
+            return new Tuple<int, int>(0,0);
+        }
+
+        public Tuple<int, int> getRightJoystickAxes()
+        {
+            return new Tuple<int, int>(0, 0);
+        }
+
+        public int getId()
+        {
+            return deviceId;
         }
 
         public void setId(int id)
         {
-            throw new NotImplementedException();
+            deviceId = id;
         }
     }
 }

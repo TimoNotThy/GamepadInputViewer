@@ -7,11 +7,10 @@ using System.Windows.Controls;
 using GamepadInputViewer.Controllers;
 using GamepadInputViewer.Model;
 using System.Windows.Shapes;
-using System.Diagnostics;
 using SharpDX;
 using System.Windows.Interop;
 using Linearstar.Windows.RawInput;
-using System.Collections.Generic;
+using GamepadInputViewer.GamePadData;
 
 namespace GamepadInputViewer
 {
@@ -29,11 +28,11 @@ namespace GamepadInputViewer
         GamepadController gamepadController;
         bool selectionChanged = false;
         public bool Checked { get; set; } = true;
-        List<sbyte> rawInputData;
+        GamepadInputData gamePadInputData;
         public MainWindow()
         {
-            rawInputData = new List<sbyte>(new sbyte[30]);
-            gamepadController = new GamepadController(rawInputData);
+            gamePadInputData = new GamepadInputData(0,0,0,0,0,0,0,0);
+            gamepadController = new GamepadController(gamePadInputData);
             InitializeComponent();
             SourceInitialized += MainWindow_SourceInitialized;
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
@@ -92,11 +91,15 @@ namespace GamepadInputViewer
                 {
                     case RawInputHidData hid:
                         var tempArray = (sbyte[])(Array)hid.Hid.ToStructure();
-                        for(int i = 0; i < tempArray.Length; i++)
-                        {
-                            rawInputData[i] = tempArray[i];
-                        }
-
+                        gamePadInputData.button1 = (RawInputButton1Flags)tempArray[9];
+                        gamePadInputData.button2 = (RawInputButton2Flags)tempArray[10];
+                        gamePadInputData.x = tempArray[11];
+                        gamePadInputData.y = tempArray[12];
+                        gamePadInputData.z = tempArray[13];
+                        gamePadInputData.Rx = tempArray[14];
+                        gamePadInputData.Ry = tempArray[15];
+                        gamePadInputData.Rz = tempArray[16];
+                        
                         break;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Linearstar.Windows.RawInput;
 
 namespace GamepadInputViewer.Controllers
@@ -17,9 +18,9 @@ namespace GamepadInputViewer.Controllers
                     rawInputGamepads.Add(device);
                 }
             }
-            if(rawInputGamepads.Count < 4)
+            if (rawInputGamepads.Count < 4)
             {
-                for(int i = rawInputGamepads.Count; i < 5; i++)
+                for(int i = rawInputGamepads.Count; i < 4; i++)
                 {
                     rawInputGamepads.Add(null);
                 }

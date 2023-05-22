@@ -1,4 +1,5 @@
-﻿using GamepadInputViewer.Model;
+﻿using GamepadInputViewer.GamePadData;
+using GamepadInputViewer.Model;
 using System;
 using System.Collections.Generic;
 
@@ -10,11 +11,11 @@ namespace GamepadInputViewer.Controllers
         private DeviceManagerDirectInput deviceManagerDirectInput;
         private DeviceManagerRawInput deviceManagerRawInput;
         private InputType inputType;
-        private List<sbyte> rawInputData;
+        private GamepadInputData gamepadInputData;
 
-        public GamepadController(List<sbyte> rawInputData)
+        public GamepadController(GamepadInputData gamepadInputData)
         {
-            this.rawInputData = rawInputData;
+            this.gamepadInputData = gamepadInputData;
             this.deviceManagerXInput = new DeviceManagerXInput();
             this.deviceManagerDirectInput = new DeviceManagerDirectInput();
             this.deviceManagerRawInput = new DeviceManagerRawInput();
@@ -31,7 +32,7 @@ namespace GamepadInputViewer.Controllers
                 case InputType.DirectInput:
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
                 case InputType.RawInput:
-                    return new GamepadRawInput(deviceManagerRawInput.GetController(), rawInputData);
+                    return new GamepadRawInput(deviceManagerRawInput.GetController(), gamepadInputData);
                 default:
                     return new GamepadDirectInput(deviceManagerDirectInput.getController());
             }
@@ -48,7 +49,7 @@ namespace GamepadInputViewer.Controllers
                     gamepad.setId(deviceId);
                     return gamepad;
                 case InputType.RawInput:
-                    var rawGamepad = new GamepadRawInput(deviceManagerRawInput.GetController(deviceId), rawInputData);
+                    var rawGamepad = new GamepadRawInput(deviceManagerRawInput.GetController(deviceId), gamepadInputData);
                     rawGamepad.setId(deviceId);
                     return rawGamepad;
                 default:

@@ -112,10 +112,32 @@ namespace GamepadInputViewer
                 }
                 else
                 {
+                    gamepadController.resetRawInputData();
+                    updateButtonColor(false, ButtonY);
+                    updateButtonColor(false, ButtonB);
+                    updateButtonColor(false, ButtonA);
+                    updateButtonColor(false, ButtonX);
+                    updateButtonColor(false, Start);
+                    updateButtonColor(false, Back);
+                    updateButtonColor(false, DPadDown);
+                    updateButtonColor(false, DPadLeft);
+                    updateButtonColor(false, DPadRight);
+                    updateButtonColor(false, DPadUp);
+                    updateButtonColor(false, LeftThumb);
+                    updateButtonColor(false, RightThumb);
+                    updateButtonColor(false, LeftShoulder);
+                    updateButtonColor(false, RightShoulder);
+                    updateTriggerColor(0, LeftTrigger);
+                    updateTriggerColor(0, RightTrigger);
+                    updateLeftThumbPosition(new Tuple<int, int>(0, 0));
+                    updateRightThumbPosition(new Tuple<int, int>(0, 0));
                     selectionChanged = true;
                 }
 
             }
+
+
+
         }
 
         private void updateLeftThumbPosition(Tuple<int, int> axes)
@@ -226,6 +248,7 @@ namespace GamepadInputViewer
                 {
                     gamepadController.setInputType(InputType.RawInput);
                 }
+                gamepadController.resetRawInputData();
             }
         }
     }

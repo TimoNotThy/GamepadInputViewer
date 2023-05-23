@@ -22,5 +22,16 @@ namespace GamepadInputViewer.GamePadData
         public sbyte Ry { get; set; }
         public sbyte Rz { get; set; }
 
+        public void reset()
+        {
+            button = 0;
+            x = 0;
+            y = 0;
+            z = 0;
+            Rx = 0;
+            Ry = 0;
+            Rz = 0;
+        }
+
     }
 }

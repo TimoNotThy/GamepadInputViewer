@@ -67,6 +67,7 @@ namespace GamepadInputViewer.Controllers
             }
             if (msg == 0x0219)
             {
+                gamepadInputData.reset();
                 deviceManagerRawInput.refreshDevices();
             }
 
@@ -142,6 +143,11 @@ namespace GamepadInputViewer.Controllers
                     return deviceManagerRawInput.isControllerConnected(deviceId);
             }
             return false;
+        }
+
+        public void resetRawInputData()
+        {
+            gamepadInputData.reset();
         }
     }
 }

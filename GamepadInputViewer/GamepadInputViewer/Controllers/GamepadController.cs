@@ -51,7 +51,7 @@ namespace GamepadInputViewer.Controllers
                         case RawInputHidData hid:
                             var tempArray = hid.Hid.ToStructure();
 
-                            ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[10], tempArray[9] }, 0);
+                            ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[9], tempArray[10] }, 0);
                             gamepadInputData.button = (RawInputButtonFlags)button;
                             gamepadInputData.x = (sbyte)tempArray[11];
                             gamepadInputData.y = (sbyte)tempArray[12];

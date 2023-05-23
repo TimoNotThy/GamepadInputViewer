@@ -14,7 +14,6 @@
   <ItemGroup>
     <PackageReference Include="RawInput.Sharp" Version="0.1.1" />
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
-    <PackageReference Include="SharpDX.RawInput" Version="4.2.0" />
     <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
   </ItemGroup>
 

@@ -181,6 +181,10 @@ namespace GamepadInputViewer
         private void DeviceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectionChanged = true;
+            if (gamepadController is not null)
+            {
+                gamepadController.resetRawInputData();
+            }
         }
         private void CheckBox_Unchecked(object sender, EventArgs e)
         {

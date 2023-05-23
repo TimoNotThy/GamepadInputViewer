@@ -148,6 +148,11 @@ namespace GamepadInputViewer.Model
             return new Tuple<int, int>(gamepad.Value.RightThumbX , gamepad.Value.RightThumbY);
         }
 
+        public Tuple<double, double> getGyroscopeAxes()
+        {
+            return new Tuple<double, double>(0, 0);
+        }
+
         private Gamepad? getGamepadState()
         {
             if (controller is not null) return controller.GetState().Gamepad;
@@ -162,5 +167,6 @@ namespace GamepadInputViewer.Model
         {
             deviceId = id;
         }
+
     }
 }

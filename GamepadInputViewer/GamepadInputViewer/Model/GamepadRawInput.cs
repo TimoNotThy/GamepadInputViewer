@@ -21,7 +21,7 @@ namespace GamepadInputViewer.Model
 
         public bool isConnected()
         {
-            return true ;
+            return rawInputDevice != null;
         }
 
         public bool isTopButtonPressed()
@@ -128,7 +128,12 @@ namespace GamepadInputViewer.Model
 
         public Tuple<int, int> getRightJoystickAxes()
         {
-            return new Tuple<int, int>(gamepadInputData.z*256, gamepadInputData.Rx*256);
+            return new Tuple<int, int>(gamepadInputData.z*256, -gamepadInputData.Rx*256);
+        }
+
+        public Tuple<double, double> getGyroscopeAxes()
+        {
+            return new Tuple<double, double>(Math.Round((double)gamepadInputData.Ry /128,3), Math.Round((double)-gamepadInputData.Rz / 128, 3));
         }
 
         public int getId()
@@ -140,5 +145,6 @@ namespace GamepadInputViewer.Model
         {
             deviceId = id;
         }
+
     }
 }

@@ -46,6 +46,11 @@
             <ComboBoxItem>XInput</ComboBoxItem>
             <ComboBoxItem>RawInput</ComboBoxItem>
         </ComboBox>
+        <Label x:Name="Gyronamelabel" Content="Gyroscope" HorizontalAlignment="Center" Margin="0,480,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Gyroxlabel" Content="x:" HorizontalAlignment="Left" Margin="342,506,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Gyroylabel" Content="y:" HorizontalAlignment="Left" Margin="400,506,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Gyroxvalue" Content="x-value" HorizontalAlignment="Left" Margin="357,506,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.079,0.156"/>
+        <Label x:Name="Gyroyvalue" Content="y-value" HorizontalAlignment="Left" Margin="414,506,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.079,0.156" Width="51"/>
 
 
 

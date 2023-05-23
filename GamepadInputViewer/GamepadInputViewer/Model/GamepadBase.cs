@@ -25,6 +25,7 @@ namespace GamepadInputViewer.Model
         public int getRightTrigger();
         public Tuple<int, int> getLeftJoystickAxes();
         public Tuple<int, int> getRightJoystickAxes();
+        public Tuple<double, double> getGyroscopeAxes();
 
     }
 }

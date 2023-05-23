@@ -106,6 +106,9 @@ namespace GamepadInputViewer
                             updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
                             updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
                             updateRightThumbPosition(gamepad.getRightJoystickAxes());
+                            Gyroxvalue.Dispatcher.Invoke(() => Gyroxvalue.Content = gamepad.getGyroscopeAxes().Item1);
+                            Gyroyvalue.Dispatcher.Invoke(() => Gyroyvalue.Content = gamepad.getGyroscopeAxes().Item2);
+
 
                         }
                         catch (SharpDXException e)

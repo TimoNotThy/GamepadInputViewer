@@ -155,6 +155,11 @@ namespace GamepadInputViewer.Model
             return new Tuple<int, int>(xAxis, -yAxis);
         }
 
+        public Tuple<double, double> getGyroscopeAxes()
+        {
+            return new Tuple<double, double>(0, 0);
+        }
+
         public int getId()
         {
             return deviceId;
@@ -164,5 +169,7 @@ namespace GamepadInputViewer.Model
         {
             deviceId = id;
         }
+
+
     }
 }

@@ -41,7 +41,7 @@
             <ComboBoxItem>Device3</ComboBoxItem>
             <ComboBoxItem>Device4</ComboBoxItem>
         </ComboBox>
-        <ComboBox x:Name="InputSelector" HorizontalAlignment="Left" Margin="700,12,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="0" SelectionChanged="InputSelector_SelectionChanged">
+        <ComboBox x:Name="InputSelector" HorizontalAlignment="Left" Margin="700,12,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="2" SelectionChanged="InputSelector_SelectionChanged">
             <ComboBoxItem>DirectInput</ComboBoxItem>
             <ComboBoxItem>XInput</ComboBoxItem>
             <ComboBoxItem>RawInput</ComboBoxItem>

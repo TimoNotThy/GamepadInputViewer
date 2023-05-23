@@ -10,22 +10,7 @@ namespace GamepadInputViewer.Controllers
         public DeviceManagerRawInput()
         {
             rawInputGamepads = new List<RawInputDevice?>();
-            var devices = RawInputDevice.GetDevices();
-            foreach (var device in devices)
-            {
-                if (device.UsageAndPage == HidUsageAndPage.GamePad)
-                {
-                    rawInputGamepads.Add(device);
-                }
-            }
-            if (rawInputGamepads.Count < 4)
-            {
-                for(int i = rawInputGamepads.Count; i < 4; i++)
-                {
-                    rawInputGamepads.Add(null);
-                }
-            }
-
+            addConnectedDevices();
         }
 
         public RawInputDevice? GetController(int number)
@@ -54,15 +39,36 @@ namespace GamepadInputViewer.Controllers
 
         public bool isControllerConnected(int index)
         {
-            if (rawInputGamepads[index] == null) {
-                return false;
+            //Trace.WriteLine(rawInputGamepads[0]?.IsConnected+ "rawInputGamepads[1]?.IsConnected+ rawInputGamepads[0]?.IsConnected+ rawInputGamepads[0]?.IsConnected)
+            //if (rawInputGamepads[index]?.IsConnected == true) {
+            if (true) { 
+                return true;
             }
             else
             {
-                return true;
+
+                return false;
             }
         }
 
+        private void addConnectedDevices()
+        {
+            var devices = RawInputDevice.GetDevices();
+            foreach (var device in devices)
+            {
+                if (device.UsageAndPage == HidUsageAndPage.GamePad)
+                {
+                    rawInputGamepads.Add(device);
+                }
+            }
+            if (rawInputGamepads.Count < 4)
+            {
+                for (int i = rawInputGamepads.Count; i < 4; i++)
+                {
+                    rawInputGamepads.Add(null);
+                }
+            }
+        }
 
     }
 

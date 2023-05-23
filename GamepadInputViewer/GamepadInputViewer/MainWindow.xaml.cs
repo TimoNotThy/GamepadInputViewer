@@ -11,6 +11,8 @@ using SharpDX;
 using System.Windows.Interop;
 using Linearstar.Windows.RawInput;
 using GamepadInputViewer.GamePadData;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace GamepadInputViewer
 {
@@ -31,7 +33,7 @@ namespace GamepadInputViewer
         GamepadInputData gamePadInputData;
         public MainWindow()
         {
-            gamePadInputData = new GamepadInputData(0,0,0,0,0,0,0,0);
+            gamePadInputData = new GamepadInputData(0,0,0,0,0,0,0);
             gamepadController = new GamepadController(gamePadInputData);
             InitializeComponent();
             SourceInitialized += MainWindow_SourceInitialized;
@@ -70,7 +72,7 @@ namespace GamepadInputViewer
             var hwnd = windowInteropHelper.Handle;
 
             RawInputDevice.RegisterDevice(HidUsageAndPage.GamePad,
-                RawInputDeviceFlags.InputSink, hwnd);
+            RawInputDeviceFlags.InputSink, hwnd);
 
             HwndSource source = HwndSource.FromHwnd(hwnd);
             source.AddHook(Hook);
@@ -90,19 +92,20 @@ namespace GamepadInputViewer
                 switch (data)
                 {
                     case RawInputHidData hid:
-                        var tempArray = (sbyte[])(Array)hid.Hid.ToStructure();
-                        gamePadInputData.button1 = (RawInputButton1Flags)tempArray[9];
-                        gamePadInputData.button2 = (RawInputButton2Flags)tempArray[10];
-                        gamePadInputData.x = tempArray[11];
-                        gamePadInputData.y = tempArray[12];
-                        gamePadInputData.z = tempArray[13];
-                        gamePadInputData.Rx = tempArray[14];
-                        gamePadInputData.Ry = tempArray[15];
-                        gamePadInputData.Rz = tempArray[16];
+                        var tempArray = hid.Hid.ToStructure();
+                        ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[10], tempArray[9] }, 0);
+                        gamePadInputData.button = (RawInputButtonFlags)button;
+                        gamePadInputData.x = (sbyte)tempArray[11];
+                        gamePadInputData.y = (sbyte)tempArray[12];
+                        gamePadInputData.z = (sbyte)tempArray[13];
+                        gamePadInputData.Rx = (sbyte)tempArray[14];
+                        gamePadInputData.Ry = (sbyte)tempArray[15];
+                        gamePadInputData.Rz = (sbyte)tempArray[16];
                         
                         break;
                 }
             }
+            
 
             return IntPtr.Zero;
         }

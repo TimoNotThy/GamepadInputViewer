@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GamepadInputViewer.GamePadData
 {
-    public enum RawInputButton1Flags : byte
+    public enum RawInputButtonFlags : ushort
     {
         A = 0x1,
         B = 0x2,
@@ -15,6 +15,14 @@ namespace GamepadInputViewer.GamePadData
         LeftBumper = 0x10,
         RightBumper = 0x20,
         Back = 0x40,
-        Start = 0x80
+        Start = 0x80,
+        LeftThumb = 0x100,
+        RightThumb = 0x200,
+        LeftTrigger = 0x400,
+        RightTrigger = 0x800,
+        DPadUp = 0x1000,
+        DPadDown = 0x2000,
+        DPadLeft = 0x4000,
+        DPadRight = 0x8000
     }
 }

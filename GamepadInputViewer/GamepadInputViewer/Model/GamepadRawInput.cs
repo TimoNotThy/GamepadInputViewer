@@ -21,7 +21,7 @@ namespace GamepadInputViewer.Model
 
         public bool isConnected()
         {
-            return true;
+            return true ;
         }
 
         public bool isTopButtonPressed()

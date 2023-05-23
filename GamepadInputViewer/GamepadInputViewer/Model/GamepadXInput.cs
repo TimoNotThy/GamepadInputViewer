@@ -8,7 +8,7 @@ namespace GamepadInputViewer.Model
         Controller? controller;
         int deviceId;
 
-        public GamepadXInput(Controller controller)
+        public GamepadXInput(Controller? controller)
         {
             this.controller = controller;
             if (controller != null)
@@ -127,7 +127,7 @@ namespace GamepadInputViewer.Model
         public Tuple<int, int> getRightJoystickAxes()
         {
             if (controller is null) return new Tuple<int, int>(0, 0);
-            return new Tuple<int, int>(getGamepadState().Value.RightThumbX, getGamepadState().Value.RightThumbY);
+            return new Tuple<int, int>(getGamepadState().Value.RightThumbX , getGamepadState().Value.RightThumbY);
         }
 
         private Gamepad? getGamepadState()

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Linearstar.Windows.RawInput;
 
 namespace GamepadInputViewer.Controllers
@@ -27,21 +26,20 @@ namespace GamepadInputViewer.Controllers
 
         public RawInputDevice? GetController()
         {
-            if (rawInputGamepads.Count > 0)
+            foreach(var gamepad in rawInputGamepads)
             {
-                return rawInputGamepads[0];
+                if(gamepad != null)
+                {
+                    return gamepad;
+                }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public bool isControllerConnected(int index)
         {
-            //Trace.WriteLine(rawInputGamepads[0]?.IsConnected+ "rawInputGamepads[1]?.IsConnected+ rawInputGamepads[0]?.IsConnected+ rawInputGamepads[0]?.IsConnected)
-            //if (rawInputGamepads[index]?.IsConnected == true) {
-            if (true) { 
+
+            if (rawInputGamepads[index] != null) { 
                 return true;
             }
             else
@@ -68,6 +66,12 @@ namespace GamepadInputViewer.Controllers
                     rawInputGamepads.Add(null);
                 }
             }
+        }
+
+        internal void refreshDevices()
+        {
+            rawInputGamepads.Clear();
+            addConnectedDevices();
         }
 
     }

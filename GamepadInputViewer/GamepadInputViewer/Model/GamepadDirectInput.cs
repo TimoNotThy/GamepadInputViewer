@@ -8,7 +8,7 @@ namespace GamepadInputViewer.Model
         Joystick? controller;
         int deviceId;
 
-        public GamepadDirectInput(Joystick controller)
+        public GamepadDirectInput(Joystick? controller)
         {
             this.controller = controller;
 

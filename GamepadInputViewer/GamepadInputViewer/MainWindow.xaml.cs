@@ -9,10 +9,6 @@ using GamepadInputViewer.Model;
 using System.Windows.Shapes;
 using SharpDX;
 using System.Windows.Interop;
-using Linearstar.Windows.RawInput;
-using GamepadInputViewer.GamePadData;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace GamepadInputViewer
 {
@@ -30,13 +26,19 @@ namespace GamepadInputViewer
         GamepadController gamepadController;
         bool selectionChanged = false;
         public bool Checked { get; set; } = true;
-        GamepadInputData gamePadInputData;
         public MainWindow()
         {
-            gamePadInputData = new GamepadInputData(0,0,0,0,0,0,0);
-            gamepadController = new GamepadController(gamePadInputData);
             InitializeComponent();
             SourceInitialized += MainWindow_SourceInitialized;
+        }
+
+        private void MainWindow_SourceInitialized(object sender, EventArgs e)
+        {
+            var windowInteropHelper = new WindowInteropHelper(this);
+            var hwnd = windowInteropHelper.Handle;
+            
+            gamepadController = new GamepadController(hwnd);
+            
             leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
             rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
             gamepad = gamepadController.getGamepad(gamepadController.getInputType());
@@ -64,50 +66,7 @@ namespace GamepadInputViewer
                     updateDeviceView();
                 }
             });
-        }
-
-        private void MainWindow_SourceInitialized(object sender, EventArgs e)
-        {
-            var windowInteropHelper = new WindowInteropHelper(this);
-            var hwnd = windowInteropHelper.Handle;
-
-            RawInputDevice.RegisterDevice(HidUsageAndPage.GamePad,
-            RawInputDeviceFlags.InputSink, hwnd);
-
-            HwndSource source = HwndSource.FromHwnd(hwnd);
-            source.AddHook(Hook);
-        }
-
-        private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
-        {
-            const int WM_INPUT = 0x00FF;
-
-            if (msg == WM_INPUT)
-            {
-                var data = RawInputData.FromHandle(lparam);
-
-                var sourceDeviceHandle = data.Header.DeviceHandle;
-                var sourceDevice = data.Device;
-
-                switch (data)
-                {
-                    case RawInputHidData hid:
-                        var tempArray = hid.Hid.ToStructure();
-                        ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[10], tempArray[9] }, 0);
-                        gamePadInputData.button = (RawInputButtonFlags)button;
-                        gamePadInputData.x = (sbyte)tempArray[11];
-                        gamePadInputData.y = (sbyte)tempArray[12];
-                        gamePadInputData.z = (sbyte)tempArray[13];
-                        gamePadInputData.Rx = (sbyte)tempArray[14];
-                        gamePadInputData.Ry = (sbyte)tempArray[15];
-                        gamePadInputData.Rz = (sbyte)tempArray[16];
-                        
-                        break;
-                }
-            }
             
-
-            return IntPtr.Zero;
         }
 
         private void updateDeviceView()
@@ -253,19 +212,21 @@ namespace GamepadInputViewer
         private void InputSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectionChanged = true;
-            if (((ComboBox)sender).SelectedIndex == 1)
-            {
-                gamepadController.setInputType(InputType.XInput);
-            }
-            else if (((ComboBox)sender).SelectedIndex == 0)
-            {
-                gamepadController.setInputType(InputType.DirectInput);
-            }
-            else
-            {
-                gamepadController.setInputType(InputType.RawInput);
-            }
+            if(gamepadController is not null) {
 
+                if (((ComboBox)sender).SelectedIndex == 1)
+                {
+                    gamepadController.setInputType(InputType.XInput);
+                }
+                else if (((ComboBox)sender).SelectedIndex == 0)
+                {
+                    gamepadController.setInputType(InputType.DirectInput);
+                }
+                else
+                {
+                    gamepadController.setInputType(InputType.RawInput);
+                }
+            }
         }
     }
 }

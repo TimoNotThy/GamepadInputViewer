@@ -41,7 +41,12 @@ namespace GamepadInputViewer
         {
             if (controllers.Length > index)
             {
-                return GetController(index).IsConnected;
+                var gamepad = GetController(index);
+                if (gamepad is not null)
+                {
+                    return gamepad.IsConnected;
+                }
+                else return false;
             }
             return false;
         }

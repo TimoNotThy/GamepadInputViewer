@@ -23,12 +23,14 @@ namespace GamepadInputViewer
         Tuple<double, double> leftThumbPosition;
         Tuple<double, double> rightThumbPosition;
         GamepadBase? gamepad;
-        GamepadController gamepadController;
+        GamepadController? gamepadController;
         bool selectionChanged = false;
         public bool Checked { get; set; } = true;
         public MainWindow()
         {
             InitializeComponent();
+            leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
+            rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
             SourceInitialized += MainWindow_SourceInitialized;
         }
 
@@ -39,8 +41,7 @@ namespace GamepadInputViewer
             
             gamepadController = new GamepadController(hwnd);
             
-            leftThumbPosition = new Tuple<double, double>(LeftThumbPos.Margin.Left, LeftThumbPos.Margin.Top);
-            rightThumbPosition = new Tuple<double, double>(RightThumbPos.Margin.Left, RightThumbPos.Margin.Top);
+
             gamepad = gamepadController.getGamepad(gamepadController.getInputType());
             Autoconnect.DataContext = this;
             Task.Run(async () =>
@@ -81,63 +82,63 @@ namespace GamepadInputViewer
         {
             if (gamepad != null)
             {
-                if (gamepadController.isControllerConnected(gamepad.getId()))
+                if (gamepadController is not null)
                 {
-                    try
+                    if (gamepadController.isControllerConnected(gamepad.getId()))
                     {
-                        updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
-                        updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
-                        updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
-                        updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
-                        updateButtonColor(gamepad.isStartButtonPressed(), Start);
-                        updateButtonColor(gamepad.isBackButtonPressed(), Back);
-                        updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
-                        updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
-                        updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
-                        updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
-                        updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
-                        updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
-                        updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
-                        updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
-                        updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
-                        updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
-                        updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
-                        updateRightThumbPosition(gamepad.getRightJoystickAxes());
+                        try
+                        {
+                            updateButtonColor(gamepad.isTopButtonPressed(), ButtonY);
+                            updateButtonColor(gamepad.isRightButtonPressed(), ButtonB);
+                            updateButtonColor(gamepad.isBottomButtonPressed(), ButtonA);
+                            updateButtonColor(gamepad.isLeftButtonPressed(), ButtonX);
+                            updateButtonColor(gamepad.isStartButtonPressed(), Start);
+                            updateButtonColor(gamepad.isBackButtonPressed(), Back);
+                            updateButtonColor(gamepad.isDPadDownPressed(), DPadDown);
+                            updateButtonColor(gamepad.isDPadLeftPressed(), DPadLeft);
+                            updateButtonColor(gamepad.isDPadRightPressed(), DPadRight);
+                            updateButtonColor(gamepad.isDPadUpPressed(), DPadUp);
+                            updateButtonColor(gamepad.isLeftJoystickPressed(), LeftThumb);
+                            updateButtonColor(gamepad.isRightJoystickPressed(), RightThumb);
+                            updateButtonColor(gamepad.isLeftBumperPressed(), LeftShoulder);
+                            updateButtonColor(gamepad.isRightBumperPressed(), RightShoulder);
+                            updateTriggerColor(gamepad.getLeftTrigger(), LeftTrigger);
+                            updateTriggerColor(gamepad.getRightTrigger(), RightTrigger);
+                            updateLeftThumbPosition(gamepad.getLeftJoystickAxes());
+                            updateRightThumbPosition(gamepad.getRightJoystickAxes());
 
+                        }
+                        catch (SharpDXException e)
+                        {
+                            selectionChanged = true;
+                        }
                     }
-                    catch (SharpDXException e)
+                    else
                     {
+                        gamepadController.resetRawInputData();
+                        updateButtonColor(false, ButtonY);
+                        updateButtonColor(false, ButtonB);
+                        updateButtonColor(false, ButtonA);
+                        updateButtonColor(false, ButtonX);
+                        updateButtonColor(false, Start);
+                        updateButtonColor(false, Back);
+                        updateButtonColor(false, DPadDown);
+                        updateButtonColor(false, DPadLeft);
+                        updateButtonColor(false, DPadRight);
+                        updateButtonColor(false, DPadUp);
+                        updateButtonColor(false, LeftThumb);
+                        updateButtonColor(false, RightThumb);
+                        updateButtonColor(false, LeftShoulder);
+                        updateButtonColor(false, RightShoulder);
+                        updateTriggerColor(0, LeftTrigger);
+                        updateTriggerColor(0, RightTrigger);
+                        updateLeftThumbPosition(new Tuple<int, int>(0, 0));
+                        updateRightThumbPosition(new Tuple<int, int>(0, 0));
                         selectionChanged = true;
                     }
                 }
-                else
-                {
-                    gamepadController.resetRawInputData();
-                    updateButtonColor(false, ButtonY);
-                    updateButtonColor(false, ButtonB);
-                    updateButtonColor(false, ButtonA);
-                    updateButtonColor(false, ButtonX);
-                    updateButtonColor(false, Start);
-                    updateButtonColor(false, Back);
-                    updateButtonColor(false, DPadDown);
-                    updateButtonColor(false, DPadLeft);
-                    updateButtonColor(false, DPadRight);
-                    updateButtonColor(false, DPadUp);
-                    updateButtonColor(false, LeftThumb);
-                    updateButtonColor(false, RightThumb);
-                    updateButtonColor(false, LeftShoulder);
-                    updateButtonColor(false, RightShoulder);
-                    updateTriggerColor(0, LeftTrigger);
-                    updateTriggerColor(0, RightTrigger);
-                    updateLeftThumbPosition(new Tuple<int, int>(0, 0));
-                    updateRightThumbPosition(new Tuple<int, int>(0, 0));
-                    selectionChanged = true;
-                }
 
             }
-
-
-
         }
 
         private void updateLeftThumbPosition(Tuple<int, int> axes)
@@ -221,13 +222,16 @@ namespace GamepadInputViewer
 
         private void updateDeviceColor(int deviceId, Ellipse elipse)
         {
-            if (gamepadController.isControllerConnected(deviceId))
+            if (gamepadController is not null)
             {
-                paintElipse(elipse, DEVICE_ACTIVE);
-            }
-            else
-            {
-                paintElipse(elipse, DEVICE_NOT_ACTIVE);
+                if (gamepadController.isControllerConnected(deviceId))
+                {
+                    paintElipse(elipse, DEVICE_ACTIVE);
+                }
+                else
+                {
+                    paintElipse(elipse, DEVICE_NOT_ACTIVE);
+                }
             }
         }
 

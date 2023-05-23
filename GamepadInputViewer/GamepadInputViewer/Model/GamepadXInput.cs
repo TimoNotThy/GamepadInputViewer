@@ -24,110 +24,128 @@ namespace GamepadInputViewer.Model
 
         public bool isTopButtonPressed()
         {
-            if (getGamepadState() is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.Y) == GamepadButtonFlags.Y;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.Y) == GamepadButtonFlags.Y;
         }
 
         public bool isRightButtonPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.B) == GamepadButtonFlags.B;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.B) == GamepadButtonFlags.B;
         }
 
         public bool isBottomButtonPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.A) == GamepadButtonFlags.A;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.A) == GamepadButtonFlags.A;
         }
 
         public bool isLeftButtonPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.X) == GamepadButtonFlags.X;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.X) == GamepadButtonFlags.X;
         }
 
         public bool isStartButtonPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.Start) == GamepadButtonFlags.Start;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.Start) == GamepadButtonFlags.Start;
         }
 
         public bool isBackButtonPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.Back) == GamepadButtonFlags.Back;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.Back) == GamepadButtonFlags.Back;
         }
 
         public bool isLeftBumperPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.LeftShoulder) == GamepadButtonFlags.LeftShoulder;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.LeftShoulder) == GamepadButtonFlags.LeftShoulder;
         }
 
         public bool isRightBumperPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.RightShoulder) == GamepadButtonFlags.RightShoulder;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.RightShoulder) == GamepadButtonFlags.RightShoulder;
         }
 
         public bool isLeftJoystickPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.LeftThumb) == GamepadButtonFlags.LeftThumb;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.LeftThumb) == GamepadButtonFlags.LeftThumb;
         }
 
         public bool isRightJoystickPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.RightThumb) == GamepadButtonFlags.RightThumb;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.RightThumb) == GamepadButtonFlags.RightThumb;
         }
 
         public bool isDPadUpPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.DPadUp) == GamepadButtonFlags.DPadUp;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.DPadUp) == GamepadButtonFlags.DPadUp;
         }
 
         public bool isDPadRightPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.DPadRight) == GamepadButtonFlags.DPadRight;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.DPadRight) == GamepadButtonFlags.DPadRight;
         }
 
         public bool isDPadDownPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.DPadDown) == GamepadButtonFlags.DPadDown;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.DPadDown) == GamepadButtonFlags.DPadDown;
         }
 
         public bool isDPadLeftPressed()
         {
-            if (controller is null) return false;
-            return (getGamepadState().Value.Buttons & GamepadButtonFlags.DPadLeft) == GamepadButtonFlags.DPadLeft;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return false;
+            return (gamepad.Value.Buttons & GamepadButtonFlags.DPadLeft) == GamepadButtonFlags.DPadLeft;
         }
 
         public int getLeftTrigger()
         {
-            if (controller is null) return 0;
-            return getGamepadState().Value.LeftTrigger;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return 0;
+            return gamepad.Value.LeftTrigger;
         }
 
         public int getRightTrigger()
         {
-            if (controller is null) return 0;
-            return getGamepadState().Value.RightTrigger;
+            var gamepad = getGamepadState();
+            if (gamepad is null) return 0;
+            return gamepad.Value.RightTrigger;
         }
 
         public Tuple<int, int> getLeftJoystickAxes()
         {
-            if (controller is null) return new Tuple<int, int>(0,0);
-            return new Tuple<int, int>(getGamepadState().Value.LeftThumbX, getGamepadState().Value.LeftThumbY);
+            var gamepad = getGamepadState();
+            if (gamepad is null) return new Tuple<int, int>(0,0);
+            return new Tuple<int, int>(gamepad.Value.LeftThumbX, gamepad.Value.LeftThumbY);
         }
 
         public Tuple<int, int> getRightJoystickAxes()
         {
-            if (controller is null) return new Tuple<int, int>(0, 0);
-            return new Tuple<int, int>(getGamepadState().Value.RightThumbX , getGamepadState().Value.RightThumbY);
+            var gamepad = getGamepadState();
+            if (gamepad is null) return new Tuple<int, int>(0, 0);
+            return new Tuple<int, int>(gamepad.Value.RightThumbX , gamepad.Value.RightThumbY);
         }
 
         private Gamepad? getGamepadState()

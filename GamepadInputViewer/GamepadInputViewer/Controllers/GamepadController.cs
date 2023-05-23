@@ -109,7 +109,7 @@ namespace GamepadInputViewer.Controllers
                     var optionalGamepad = deviceManagerRawInput.GetController(deviceId);
                     if(optionalGamepad is not null)
                     {
-                        selectedDevice = deviceManagerRawInput.GetController().Handle;
+                        selectedDevice = optionalGamepad.Handle;
                     }
                     var rawGamepad = new GamepadRawInput(optionalGamepad, gamepadInputData);
                     rawGamepad.setId(deviceId);

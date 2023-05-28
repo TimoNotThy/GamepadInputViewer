@@ -9,6 +9,7 @@ using GamepadInputViewer.Model;
 using System.Windows.Shapes;
 using SharpDX;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace GamepadInputViewer
 {
@@ -219,7 +220,9 @@ namespace GamepadInputViewer
         {
             if (value > Gamepad.TriggerThreshold)
             {
-                paintElipse(elipse, BUTTON_PRESSED);
+                double normValue = (double)value / 255d;
+                paintElipse(elipse, Color.FromRgb((byte)(BUTTON_NOT_PRESSED.R - (BUTTON_NOT_PRESSED.R * normValue)),
+                    BUTTON_PRESSED.G, (byte)(BUTTON_NOT_PRESSED.B - (BUTTON_NOT_PRESSED.B * normValue))));
             }
             else
             {

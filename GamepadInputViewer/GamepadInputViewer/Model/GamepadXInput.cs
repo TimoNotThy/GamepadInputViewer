@@ -1,5 +1,6 @@
 ﻿using SharpDX.XInput;
 using System;
+using System.Diagnostics;
 
 namespace GamepadInputViewer.Model
 {

@@ -2,11 +2,10 @@
 
 namespace GamepadInputViewer.Model
 {
-    internal interface GamepadBase
+    internal interface IGamepad
     {
         public int getId();
         public void setId(int id);
-        public bool isConnected();
         public bool isTopButtonPressed();
         public bool isRightButtonPressed();
         public bool isBottomButtonPressed();

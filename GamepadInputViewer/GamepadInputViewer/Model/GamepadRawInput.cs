@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace GamepadInputViewer.Model
 {
-    internal class GamepadRawInput : GamepadBase
+    internal class GamepadRawInput : IGamepad
     {
         GamepadInputData gamepadInputData;
         RawInputDevice? rawInputDevice;
@@ -17,11 +17,6 @@ namespace GamepadInputViewer.Model
             this.gamepadInputData = gamepadInputData;
             this.rawInputDevice = rawInputDevice;
                 deviceId = 0;
-        }
-
-        public bool isConnected()
-        {
-            return rawInputDevice != null;
         }
 
         public bool isTopButtonPressed()

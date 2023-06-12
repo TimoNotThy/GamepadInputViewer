@@ -8,6 +8,7 @@ namespace GamepadInputViewer.GamePadData
 {
     public enum RawInputButtonFlags : ushort
     {
+
         A = 0x1,
         B = 0x2,
         X = 0x4,

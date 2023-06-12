@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace GamepadInputViewer.Model
 {
-    internal class GamepadXInput : GamepadBase
+    internal class GamepadXInput : IGamepad
     {
         Controller? controller;
         int deviceId;
@@ -16,11 +16,6 @@ namespace GamepadInputViewer.Model
             {
                 deviceId = ((int)controller.UserIndex);
             }
-        }
-        public bool isConnected()
-        {
-            if (controller is null) return false;
-            return controller.IsConnected;
         }
 
         public bool isTopButtonPressed()

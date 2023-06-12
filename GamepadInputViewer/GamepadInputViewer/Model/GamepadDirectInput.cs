@@ -1,9 +1,10 @@
 ﻿using SharpDX.DirectInput;
 using System;
+using System.Diagnostics;
 
 namespace GamepadInputViewer.Model
 {
-    internal class GamepadDirectInput : GamepadBase
+    internal class GamepadDirectInput : IGamepad
     {
         Joystick? controller;
         int deviceId;
@@ -18,11 +19,6 @@ namespace GamepadInputViewer.Model
                 controller.Acquire();
                 deviceId = controller.Properties.JoystickId;
             }
-        }
-
-        public bool isConnected()
-        {
-            return controller != null;
         }
 
         public bool isTopButtonPressed()
@@ -79,7 +75,6 @@ namespace GamepadInputViewer.Model
         {
             if (controller is null) return false;
             int? value = -1;
-
             if (controller.GetCurrentState().PointOfViewControllers.GetValue(0) is not null)
             {
                 value = (int?)controller.GetCurrentState().PointOfViewControllers.GetValue(0);
@@ -138,7 +133,6 @@ namespace GamepadInputViewer.Model
         public Tuple<int, int> getLeftJoystickAxes()
         {
             if (controller is null) return new Tuple<int, int>(0, 0);
-            if (!isConnected()) return new Tuple<int, int>(0, 0);
             int xAxis = controller.GetCurrentState().X;
             int yAxis = controller.GetCurrentState().Y;
             xAxis -= 32767;

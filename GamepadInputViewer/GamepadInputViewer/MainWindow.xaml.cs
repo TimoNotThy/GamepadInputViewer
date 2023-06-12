@@ -23,7 +23,7 @@ namespace GamepadInputViewer
         int THUMB_PADDING = 20;
         Tuple<double, double> leftThumbPosition;
         Tuple<double, double> rightThumbPosition;
-        GamepadBase? gamepad;
+        IGamepad? gamepad;
         GamepadController? gamepadController;
         bool selectionChanged = false;
         public bool Checked { get; set; } = true;
@@ -42,7 +42,6 @@ namespace GamepadInputViewer
             
             gamepadController = new GamepadController(hwnd);
             
-
             gamepad = gamepadController.getGamepad(gamepadController.getInputType());
             Autoconnect.DataContext = this;
             Task.Run(async () =>

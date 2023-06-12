@@ -3,7 +3,6 @@ using GamepadInputViewer.Model;
 using Linearstar.Windows.RawInput;
 using Linearstar.Windows.RawInput.Native;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Interop;
 
@@ -44,13 +43,16 @@ namespace GamepadInputViewer.Controllers
             {
                 RawInputData data = RawInputData.FromHandle(lparam);
                 var sourceDeviceHandle = data.Header.DeviceHandle;
+
                 if (sourceDeviceHandle == selectedDevice)
                 {
                     switch (data)
                     {
                         case RawInputHidData hid:
-                            var tempArray = hid.Hid.ToStructure();
 
+
+                            if (data.Device?.ManufacturerName == "BtGamepad") { 
+                            var tempArray = hid.Hid.ToStructure();
                             ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[9], tempArray[10] }, 0);
                             gamepadInputData.button = (RawInputButtonFlags)button;
                             gamepadInputData.x = (sbyte)tempArray[11];
@@ -59,7 +61,74 @@ namespace GamepadInputViewer.Controllers
                             gamepadInputData.Rx = (sbyte)tempArray[14];
                             gamepadInputData.Ry = (sbyte)tempArray[15];
                             gamepadInputData.Rz = (sbyte)tempArray[16];
+                            }
+                            else if (data.Device?.ProductId == 654)
+                            {
+                                var tempArray = hid.Hid.ToStructure();
+                                byte tempButtons = (byte)(tempArray[20] & 0x3);
+                                if (tempArray[18] < 127)
+                                {
+                                    tempButtons = (byte)(tempButtons ^ 0x8);
+                                }
+                                if (tempArray[18] > 129)
+                                {
+                                    tempButtons = (byte)(tempButtons ^ 0x4);
+                                }
 
+                                if ((tempArray[20] & 0x4) == 0x4)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x10);
+                                }
+                                if ((tempArray[20] & 0x8) == 0x8)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x90);
+                                }
+                                if ((tempArray[20] & 0xC) == 0xC)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x80);
+                                }
+                                if ((tempArray[20] & 0x10) == 0x10)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0xA0);
+                                }
+                                if ((tempArray[20] & 0x14) == 0x14)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x20);
+                                }
+                                if ((tempArray[20] & 0x18) == 0x18)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x60);
+                                }
+                                if ((tempArray[20] & 0x1C) == 0x1C)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x40);
+                                }
+                                if ((tempArray[20] & 0x20) == 0x20)
+                                {
+                                    tempButtons = (byte)(tempButtons & 0x00);
+                                    tempButtons = (byte)(tempButtons ^ 0x50);
+                                }
+                                ushort button = BitConverter.ToUInt16(new byte[2] { tempArray[19], tempButtons }, 0);
+                                gamepadInputData.button = (RawInputButtonFlags)button;
+                                ushort leftX = BitConverter.ToUInt16(new byte[2] { tempArray[9], tempArray[10] }, 0);
+                                ushort leftY = BitConverter.ToUInt16(new byte[2] { tempArray[11], tempArray[12] }, 0);
+                                ushort rightX = BitConverter.ToUInt16(new byte[2] { tempArray[13], tempArray[14] }, 0);
+                                ushort rightY = BitConverter.ToUInt16(new byte[2] { tempArray[15], tempArray[16] }, 0);
+                                gamepadInputData.x = (sbyte)(leftX/256 +128);
+                                gamepadInputData.y = (sbyte)(leftY/256 + 128);
+                                gamepadInputData.z = (sbyte)(rightX/256 + 128);
+                                gamepadInputData.Rx = (sbyte)(rightY/256 + 128);
+                                gamepadInputData.Ry = 0;
+                                gamepadInputData.Rz = 0;
+
+                            }
                             break;
                     }
                 }
@@ -75,7 +144,7 @@ namespace GamepadInputViewer.Controllers
             return IntPtr.Zero;
         }
 
-        public GamepadBase? getGamepad(InputType inputType)
+        public IGamepad? getGamepad(InputType inputType)
         {
             switch (inputType)
             {
@@ -95,7 +164,7 @@ namespace GamepadInputViewer.Controllers
             }
         }
 
-        public GamepadBase? getGamepad(InputType inputType, int deviceId)
+        public IGamepad? getGamepad(InputType inputType, int deviceId)
         {
             switch (inputType)
             {
@@ -149,5 +218,6 @@ namespace GamepadInputViewer.Controllers
         {
             gamepadInputData.reset();
         }
+
     }
 }

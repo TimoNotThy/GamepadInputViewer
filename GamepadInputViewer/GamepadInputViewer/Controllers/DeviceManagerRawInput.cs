@@ -38,15 +38,7 @@ namespace GamepadInputViewer.Controllers
 
         public bool isControllerConnected(int index)
         {
-
-            if (rawInputGamepads[index] != null) { 
-                return true;
-            }
-            else
-            {
-
-                return false;
-            }
+            return rawInputGamepads[index] != null;
         }
 
         private void addConnectedDevices()

@@ -21,86 +21,72 @@ namespace GamepadInputViewer.Model
 
         public bool isTopButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.Y) == RawInputButtonFlags.Y) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.Y) == RawInputButtonFlags.Y;
         }
 
         public bool isRightButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.B) == RawInputButtonFlags.B) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.B) == RawInputButtonFlags.B;
         }
 
         public bool isBottomButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.A) == RawInputButtonFlags.A) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.A) == RawInputButtonFlags.A;
         }
 
         public bool isLeftButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.X) == RawInputButtonFlags.X) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.X) == RawInputButtonFlags.X;
         }
 
         public bool isStartButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.Start) == RawInputButtonFlags.Start) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.Start) == RawInputButtonFlags.Start;
         }
 
         public bool isBackButtonPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.Back) == RawInputButtonFlags.Back) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.Back) == RawInputButtonFlags.Back;
         }
 
         public bool isLeftBumperPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.LeftBumper) == RawInputButtonFlags.LeftBumper) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.LeftBumper) == RawInputButtonFlags.LeftBumper;
         }
 
         public bool isRightBumperPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.RightBumper) == RawInputButtonFlags.RightBumper) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.RightBumper) == RawInputButtonFlags.RightBumper;
         }
 
         public bool isLeftJoystickPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.LeftThumb) == RawInputButtonFlags.LeftThumb) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.LeftThumb) == RawInputButtonFlags.LeftThumb;
         }
 
         public bool isRightJoystickPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.RightThumb) == RawInputButtonFlags.RightThumb) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.RightThumb) == RawInputButtonFlags.RightThumb;
         }
 
         public bool isDPadUpPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.DPadUp) == RawInputButtonFlags.DPadUp) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.DPadUp) == RawInputButtonFlags.DPadUp;
         }
 
         public bool isDPadRightPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.DPadRight) == RawInputButtonFlags.DPadRight) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.DPadRight) == RawInputButtonFlags.DPadRight;
         }
 
         public bool isDPadDownPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.DPadDown) == RawInputButtonFlags.DPadDown) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.DPadDown) == RawInputButtonFlags.DPadDown;
         }
 
         public bool isDPadLeftPressed()
         {
-            if ((gamepadInputData.button & RawInputButtonFlags.DPadLeft) == RawInputButtonFlags.DPadLeft) return true;
-            return false;
+            return (gamepadInputData.button & RawInputButtonFlags.DPadLeft) == RawInputButtonFlags.DPadLeft;
         }
 
         public int getLeftTrigger()
